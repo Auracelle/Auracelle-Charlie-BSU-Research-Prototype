@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it."
+title: "Auracelle Charlie — BSU Research Instrument (Prototype)"
+authors:
+  - family-names: "Evans"
+    given-names: "Grace-Alice"
+date-released: "2026-03-02"
+type: software
+license: MIT
+repository-code: "https://github.com/<your-org-or-user>/auracelle-charlie-bsu-sandbox"
+abstract: >
+  Auracelle Charlie is a governance-focused wargaming simulation interface
+  used as a doctoral research instrument for policy stress-testing, evidence capture,
+  and after-action review generation under the E-AGPO-HT framework.
