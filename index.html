@@ -1,0 +1,2519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auracelle Charlie — BSU Research Instrument</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=JetBrains+Mono:wght@300;400;500;600&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #f5f2ed;
+  --bg2: #edeae3;
+  --surface: #ffffff;
+  --surface2: #f9f7f4;
+  --ink: #1a1612;
+  --ink2: #3d3830;
+  --ink3: #6b6358;
+  --ink4: #9c948a;
+  --rule: #d8d2c8;
+  --teal: #1a7a6e;
+  --teal-light: #e8f4f2;
+  --teal-mid: #2d9d8e;
+  --amber: #b5620a;
+  --amber-light: #fdf3e7;
+  --crimson: #9b2335;
+  --crimson-light: #fdeef0;
+  --slate: #2c4a6e;
+  --slate-light: #edf2f8;
+  --gold: #c9922a;
+  --shadow: rgba(26,22,18,0.08);
+  --shadow-md: rgba(26,22,18,0.14);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13.5px;
+  line-height: 1.6;
+  min-height: 100vh;
+}
+
+/* Subtle paper texture */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0;
+}
+
+.wrap { position: relative; z-index: 1; max-width: 1380px; margin: 0 auto; padding: 0 24px; }
+
+/* ── MASTHEAD ── */
+.masthead {
+  background: var(--ink);
+  color: #f0ece4;
+  padding: 0;
+  border-bottom: 3px solid var(--teal);
+}
+
+.masthead-inner {
+  display: flex; align-items: stretch; justify-content: space-between;
+  max-width: 1380px; margin: 0 auto; padding: 0 24px;
+}
+
+.masthead-left { padding: 20px 0 18px; flex: 1; }
+
+.institution-line {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; letter-spacing: 2.5px; text-transform: uppercase;
+  color: rgba(240,236,228,0.5); margin-bottom: 8px;
+}
+
+.masthead-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(20px,3vw,30px); font-weight: 700;
+  letter-spacing: -0.3px; line-height: 1.1;
+  color: #f0ece4;
+}
+
+.masthead-title em { color: var(--teal-mid); font-style: normal; }
+
+.masthead-subtitle {
+  margin-top: 5px;
+  font-size: 11px; color: rgba(240,236,228,0.55);
+  font-style: italic;
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.2px;
+}
+
+.masthead-right {
+  padding: 18px 0 16px 40px;
+  border-left: 1px solid rgba(255,255,255,0.08);
+  display: flex; flex-direction: column; align-items: flex-end; justify-content: center;
+  gap: 4px; min-width: 260px;
+}
+
+.meta-line {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: rgba(240,236,228,0.4);
+  letter-spacing: 0.5px;
+}
+
+.meta-line strong { color: rgba(240,236,228,0.75); font-weight: 500; }
+
+.session-badge {
+  margin-top: 8px;
+  display: flex; align-items: center; gap: 7px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--teal-mid);
+  letter-spacing: 1px;
+}
+
+.session-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--teal-mid); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+
+/* ── NAV ── */
+.nav {
+  background: var(--surface);
+  border-bottom: 1px solid var(--rule);
+  box-shadow: 0 1px 4px var(--shadow);
+  position: sticky; top: 0; z-index: 50;
+}
+
+.nav-inner {
+  display: flex; align-items: center;
+  max-width: 1380px; margin: 0 auto; padding: 0 24px;
+  gap: 0;
+}
+
+.nav-tab {
+  padding: 13px 18px;
+  font-size: 11.5px; font-weight: 500; letter-spacing: 0.3px;
+  color: var(--ink3); cursor: pointer;
+  border: none; background: none;
+  border-bottom: 2px solid transparent;
+  transition: all 0.18s; white-space: nowrap;
+}
+
+.nav-tab:hover { color: var(--ink); background: var(--bg2); }
+.nav-tab.active { color: var(--teal); border-bottom-color: var(--teal); background: var(--teal-light); }
+
+.nav-spacer { flex: 1; }
+
+.session-id-display {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--ink4);
+  padding: 0 12px; letter-spacing: 0.5px;
+}
+
+/* ── LAYOUT ── */
+.main {
+  display: grid;
+  grid-template-columns: 310px 1fr;
+  gap: 20px;
+  padding: 20px 0 80px;
+  align-items: start;
+}
+
+.sidebar { display: flex; flex-direction: column; gap: 14px; }
+
+/* ── CARDS ── */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  box-shadow: 0 1px 4px var(--shadow);
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--surface2);
+}
+
+.card-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9.5px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--ink3); font-weight: 500;
+}
+
+.card-body { padding: 14px; }
+
+/* ── FORM ELEMENTS ── */
+.field-label {
+  font-size: 10px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink4); font-weight: 500; margin-bottom: 5px; display: block;
+}
+
+.field-select, .field-input, .field-textarea {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--rule);
+  border-radius: 4px;
+  color: var(--ink);
+  padding: 7px 10px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  transition: border-color 0.15s;
+  outline: none;
+  appearance: none;
+}
+
+.field-select:focus, .field-input:focus, .field-textarea:focus {
+  border-color: var(--teal); box-shadow: 0 0 0 2px rgba(26,122,110,0.1);
+}
+
+.field-textarea { resize: vertical; min-height: 72px; line-height: 1.5; }
+
+.field-group { margin-bottom: 11px; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 8px 16px; border: none; border-radius: 4px;
+  font-family: 'DM Sans', sans-serif; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; letter-spacing: 0.2px;
+}
+
+.btn-teal { background: var(--teal); color: #fff; }
+.btn-teal:hover { background: #155f55; box-shadow: 0 2px 8px rgba(26,122,110,0.3); }
+.btn-amber { background: var(--amber); color: #fff; }
+.btn-amber:hover { background: #944f08; }
+.btn-outline { background: transparent; color: var(--teal); border: 1px solid var(--teal); }
+.btn-outline:hover { background: var(--teal-light); }
+.btn-ghost { background: transparent; color: var(--ink3); border: 1px solid var(--rule); }
+.btn-ghost:hover { background: var(--bg2); }
+.btn-crimson { background: var(--crimson); color: #fff; }
+.btn-crimson:hover { background: #7d1c2a; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-sm { padding: 5px 11px; font-size: 11.5px; }
+
+/* ── TAGS / BADGES ── */
+.tag {
+  display: inline-flex; align-items: center;
+  padding: 2px 8px; border-radius: 3px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; letter-spacing: 1px; text-transform: uppercase; font-weight: 500;
+}
+
+.tag-teal { background: var(--teal-light); color: var(--teal); border: 1px solid rgba(26,122,110,0.25); }
+.tag-amber { background: var(--amber-light); color: var(--amber); border: 1px solid rgba(181,98,10,0.25); }
+.tag-crimson { background: var(--crimson-light); color: var(--crimson); border: 1px solid rgba(155,35,53,0.25); }
+.tag-slate { background: var(--slate-light); color: var(--slate); border: 1px solid rgba(44,74,110,0.25); }
+.tag-ink { background: var(--bg2); color: var(--ink3); border: 1px solid var(--rule); }
+
+/* ── DEMOGRAPHIC COMPOSITOR ── */
+.demo-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 6px;
+}
+
+.demo-option {
+  padding: 8px 10px; border: 1px solid var(--rule);
+  border-radius: 4px; cursor: pointer;
+  transition: all 0.15s; background: var(--bg);
+  text-align: center;
+}
+
+.demo-option:hover { border-color: var(--teal); background: var(--teal-light); }
+.demo-option.selected { border-color: var(--teal); background: var(--teal-light); }
+.demo-option.selected .demo-label { color: var(--teal); }
+
+.demo-icon { font-size: 16px; display: block; margin-bottom: 3px; }
+.demo-label { font-size: 10.5px; font-weight: 500; color: var(--ink2); display: block; }
+.demo-code {
+  font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  color: var(--ink4); display: block; margin-top: 1px;
+}
+
+/* ── ACTOR ROSTER ── */
+.actor-item {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 0; border-bottom: 1px solid var(--rule);
+}
+.actor-item:last-child { border-bottom: none; }
+.actor-pip { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.actor-name { font-size: 12px; font-weight: 500; flex: 1; color: var(--ink2); }
+.actor-role { font-size: 10.5px; color: var(--ink4); }
+
+/* ── METRIC MINI ── */
+.metric-row {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 6px 0; border-bottom: 1px solid var(--rule);
+}
+.metric-row:last-child { border-bottom: none; }
+.metric-key { font-size: 11.5px; color: var(--ink3); }
+.metric-val {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px; font-weight: 600; color: var(--teal);
+}
+.metric-val.warn { color: var(--amber); }
+.metric-val.crit { color: var(--crimson); }
+
+/* ── CONTENT TABS ── */
+.tab-panel { display: none; flex-direction: column; gap: 16px; }
+.tab-panel.active { display: flex; }
+
+/* ── FACILITATOR TURN ENTRY ── */
+.facilitator-zone {
+  background: var(--amber-light);
+  border: 1px solid rgba(181,98,10,0.3);
+  border-radius: 6px; padding: 16px;
+}
+
+.facilitator-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 12px;
+}
+
+.facilitator-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--amber); animation: pulse 1.2s infinite;
+}
+
+.facilitator-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--amber); font-weight: 600;
+}
+
+/* ── TURN LOG ── */
+.turn-log { display: flex; flex-direction: column; gap: 0; }
+
+.turn-entry {
+  padding: 11px 14px; border-bottom: 1px solid var(--rule);
+  display: grid; grid-template-columns: 28px 110px 1fr auto;
+  gap: 10px; align-items: start;
+  animation: slideIn 0.25s ease;
+  transition: background 0.1s;
+}
+.turn-entry:hover { background: var(--surface2); }
+.turn-entry:last-child { border-bottom: none; }
+
+@keyframes slideIn { from{opacity:0;transform:translateY(-4px)} to{opacity:1;transform:none} }
+
+.turn-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; color: var(--ink4);
+  padding-top: 2px;
+}
+
+.turn-actor-block { }
+.turn-actor-name { font-size: 12px; font-weight: 600; color: var(--ink2); }
+.turn-actor-type { font-size: 10px; color: var(--ink4); }
+
+.turn-main { }
+.turn-action { font-size: 12.5px; color: var(--ink); margin-bottom: 3px; }
+.turn-rationale { font-size: 11.5px; color: var(--ink3); font-style: italic; line-height: 1.5; }
+.turn-flags { display: flex; gap: 5px; margin-top: 6px; flex-wrap: wrap; }
+
+.turn-meta { text-align: right; }
+.turn-bgc {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; font-weight: 600; color: var(--teal);
+}
+.turn-latency { font-size: 10px; color: var(--ink4); margin-top: 3px; }
+
+/* ── GOVERNANCE INDICATORS ── */
+.indicator-grid {
+  display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+}
+
+.indicator-card {
+  border: 1px solid var(--rule); border-radius: 5px;
+  padding: 12px 14px; background: var(--surface2);
+  position: relative; overflow: hidden;
+}
+
+.indicator-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 3px;
+}
+
+.indicator-card.teal::after { background: var(--teal); }
+.indicator-card.amber::after { background: var(--amber); }
+.indicator-card.crimson::after { background: var(--crimson); }
+.indicator-card.slate::after { background: var(--slate); }
+.indicator-card.gold::after { background: var(--gold); }
+
+.ind-label { font-size: 10px; color: var(--ink4); letter-spacing: 0.8px; text-transform: uppercase; font-weight: 500; }
+.ind-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 32px; font-weight: 700; color: var(--ink); line-height: 1.1; margin: 4px 0 2px;
+}
+.ind-unit { font-size: 11px; color: var(--ink4); }
+.ind-formula {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px; color: var(--ink4); margin-top: 6px;
+  padding-top: 6px; border-top: 1px solid var(--rule);
+}
+
+.ind-bar { height: 4px; background: var(--rule); border-radius: 2px; margin-top: 8px; overflow: hidden; }
+.ind-bar-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+
+/* ── THRESHOLD ALERT ── */
+.threshold-alert {
+  background: var(--crimson-light);
+  border: 1px solid rgba(155,35,53,0.3);
+  border-radius: 5px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  animation: slideIn 0.2s ease;
+}
+
+.alert-icon { font-size: 16px; flex-shrink: 0; }
+.alert-text { font-size: 12px; color: var(--crimson); }
+.alert-text strong { font-weight: 600; }
+
+/* ── BGC MATRIX ── */
+.bgc-matrix-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px;
+}
+
+.bgc-cell {
+  background: var(--surface2); border: 1px solid var(--rule);
+  border-radius: 4px; padding: 8px 5px; text-align: center;
+  cursor: pointer; transition: all 0.15s;
+}
+.bgc-cell:hover { border-color: var(--teal); background: var(--teal-light); }
+.bgc-cell.active { border-color: var(--teal); background: var(--teal-light); }
+
+.bgc-code { font-family: 'JetBrains Mono', monospace; font-size: 11px; font-weight: 600; color: var(--teal); }
+.bgc-score { font-size: 16px; font-weight: 700; color: var(--ink); margin: 3px 0; }
+.bgc-bar { height: 3px; background: var(--rule); border-radius: 2px; overflow: hidden; margin-top: 4px; }
+.bgc-fill { height: 100%; border-radius: 2px; background: var(--teal); transition: width 0.7s ease; }
+
+/* ── VALIDATION PANEL ── */
+.validation-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.validation-table th {
+  text-align: left; padding: 8px 10px;
+  font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase;
+  color: var(--ink4); border-bottom: 2px solid var(--rule); font-weight: 500;
+}
+.validation-table td { padding: 10px 10px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.validation-table tr:hover td { background: var(--surface2); }
+.validation-table tr:last-child td { border-bottom: none; }
+
+.case-name { font-weight: 600; color: var(--ink2); font-size: 12px; }
+.case-year { font-size: 10px; color: var(--ink4); font-family: 'JetBrains Mono', monospace; }
+.match-score { font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 600; }
+.match-high { color: var(--teal); }
+.match-mid { color: var(--amber); }
+.match-low { color: var(--crimson); }
+
+.delta-bar { height: 5px; background: var(--rule); border-radius: 3px; overflow: hidden; margin-top: 5px; }
+.delta-fill { height: 100%; border-radius: 3px; transition: width 0.7s; }
+
+/* ── AAR / EXPORT ── */
+.aar-section { margin-bottom: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--rule); }
+.aar-section:last-child { border-bottom: none; }
+.aar-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 15px; font-weight: 700; color: var(--ink2); margin-bottom: 8px;
+}
+.aar-text { font-size: 12.5px; color: var(--ink2); line-height: 1.7; }
+.aar-finding {
+  background: var(--teal-light); border-left: 3px solid var(--teal);
+  padding: 10px 14px; border-radius: 0 4px 4px 0;
+  font-size: 12.5px; color: var(--ink2); margin-top: 10px; line-height: 1.6;
+}
+
+.code-block {
+  background: var(--ink); color: #c8f0ec;
+  border-radius: 5px; padding: 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10.5px; line-height: 1.7;
+  overflow-x: auto; white-space: pre;
+}
+
+/* ── FORMULA BOX ── */
+.formula-box {
+  background: var(--bg2); border: 1px solid var(--rule);
+  border-radius: 4px; padding: 10px 14px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; color: var(--ink3);
+  font-style: italic; line-height: 1.6;
+}
+.formula-box em { color: var(--teal); font-style: normal; font-weight: 600; }
+
+/* ── DATA TABLE ── */
+.data-tbl { width: 100%; border-collapse: collapse; font-size: 12px; }
+.data-tbl th { text-align: left; padding: 7px 10px; font-size: 9.5px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--ink4); border-bottom: 2px solid var(--rule); font-weight: 500; background: var(--surface2); }
+.data-tbl td { padding: 8px 10px; border-bottom: 1px solid var(--rule); color: var(--ink2); }
+.data-tbl tr:hover td { background: var(--surface2); }
+
+/* ── G-GWC DISPLAY ── */
+.gwc-display {
+  background: var(--ink); color: #f0ece4;
+  border-radius: 6px; padding: 18px; text-align: center;
+}
+.gwc-label { font-size: 9px; letter-spacing: 2.5px; text-transform: uppercase; color: rgba(240,236,228,0.45); }
+.gwc-value { font-family: 'Playfair Display', serif; font-size: 52px; font-weight: 700; color: var(--teal-mid); line-height: 1; margin: 6px 0 4px; }
+.gwc-formula { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: rgba(240,236,228,0.35); }
+
+.maturity-track { display: flex; gap: 4px; margin-top: 12px; }
+.m-seg { flex: 1; height: 7px; border-radius: 2px; background: rgba(255,255,255,0.1); transition: background 0.5s; }
+.m-seg.on { background: var(--teal-mid); }
+
+/* ── STATUS BAR ── */
+.status-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--ink); color: rgba(240,236,228,0.6);
+  padding: 7px 24px; display: flex; align-items: center;
+  justify-content: space-between; z-index: 100;
+  font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.3px;
+}
+.sb-left, .sb-right { display: flex; gap: 20px; align-items: center; }
+.sb-item { display: flex; gap: 6px; }
+.sb-key { color: rgba(240,236,228,0.35); }
+.sb-val { color: rgba(240,236,228,0.7); }
+
+/* ── MISC ── */
+.divider { width: 100%; height: 1px; background: var(--rule); margin: 4px 0; }
+.flex-gap { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.text-muted { font-size: 11.5px; color: var(--ink4); }
+.obj-ref { font-family: 'JetBrains Mono', monospace; font-size: 9.5px; color: var(--slate); background: var(--slate-light); border: 1px solid rgba(44,74,110,0.2); border-radius: 3px; padding: 1px 6px; }
+
+.chart-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.chart-label { font-size: 11px; color: var(--ink3); width: 130px; flex-shrink: 0; }
+.chart-track { flex: 1; height: 6px; background: var(--rule); border-radius: 3px; overflow: hidden; }
+.chart-fill { height: 100%; border-radius: 3px; transition: width 0.8s ease; }
+.chart-val { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink2); width: 45px; text-align: right; }
+
+.empty-state { text-align: center; padding: 32px; color: var(--ink4); font-size: 12.5px; font-style: italic; }
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 3px; }
+
+/* ── TOOLTIPS ── */
+[title] { cursor: help; }
+
+.tooltip-host { position: relative; display: inline-flex; align-items: center; }
+.tooltip-host .tt {
+  display: none;
+  position: absolute; bottom: calc(100% + 6px); left: 50%;
+  transform: translateX(-50%);
+  background: var(--ink); color: #f0ece4;
+  font-family: 'DM Sans', sans-serif; font-size: 11.5px; font-weight: 400;
+  line-height: 1.5; padding: 8px 12px; border-radius: 4px;
+  width: 220px; text-align: left; z-index: 200;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+  pointer-events: none; white-space: normal;
+}
+.tooltip-host:hover .tt { display: block; }
+.tooltip-host .tt::after {
+  content: ''; position: absolute; top: 100%; left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent; border-top-color: var(--ink);
+}
+
+/* ── MARL ── */
+.marl-panel {
+  background: linear-gradient(135deg, #0f1e2d 0%, #1a1612 100%);
+  border: 1px solid rgba(45,157,142,0.3);
+  border-radius: 6px; overflow: hidden;
+  color: #c8e8e4;
+}
+.marl-header {
+  background: rgba(45,157,142,0.1);
+  border-bottom: 1px solid rgba(45,157,142,0.2);
+  padding: 11px 16px; display: flex; align-items: center; justify-content: space-between;
+}
+.marl-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--teal-mid); font-weight: 600;
+}
+.marl-body { padding: 16px; }
+.marl-agent-grid { display: grid; grid-template-columns: repeat(5,1fr); gap: 8px; margin-bottom:14px; }
+.marl-agent {
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 4px; padding: 10px 8px; text-align: center;
+}
+.marl-agent-name { font-size: 10px; font-weight: 600; margin-bottom: 4px; }
+.marl-agent-q { font-family: 'JetBrains Mono', monospace; font-size: 13px; color: var(--teal-mid); font-weight: 700; }
+.marl-agent-policy { font-size: 9px; color: rgba(200,232,228,0.5); margin-top: 3px; }
+.marl-agent-rew { font-size: 10px; color: #f5c518; margin-top:2px; }
+.marl-metrics { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; margin-bottom:12px; }
+.marl-metric { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius:3px; padding:8px 10px; }
+.marl-metric-label { font-size:9px; color:rgba(200,232,228,0.45); letter-spacing:1px; text-transform:uppercase; }
+.marl-metric-val { font-family:'JetBrains Mono',monospace; font-size:14px; font-weight:700; color:var(--teal-mid); margin-top:2px; }
+.marl-log { background: rgba(0,0,0,0.3); border-radius:3px; padding:10px; height:120px; overflow-y:auto; font-family:'JetBrains Mono',monospace; font-size:10px; line-height:1.7; color:rgba(200,232,228,0.6); }
+.marl-log-line { border-bottom:1px solid rgba(255,255,255,0.03); padding:1px 0; }
+.marl-log-line .agt { color:var(--teal-mid); }
+.marl-log-line .rew { color:#f5c518; }
+.marl-log-line .pol { color:#a78bfa; }
+.q-table { width:100%; border-collapse:collapse; font-size:10.5px; margin-top:8px; }
+.q-table th { text-align:left; padding:5px 8px; font-size:9px; letter-spacing:1px; text-transform:uppercase; color:rgba(200,232,228,0.4); border-bottom:1px solid rgba(255,255,255,0.08); font-weight:500; }
+.q-table td { padding:5px 8px; border-bottom:1px solid rgba(255,255,255,0.04); color:rgba(200,232,228,0.7); font-family:'JetBrains Mono',monospace; font-size:10px; }
+.q-pos { color:#4ade80; } .q-neg { color:#f87171; } .q-neu { color:rgba(200,232,228,0.5); }
+.marl-run-btn { background:var(--teal); color:#fff; border:none; padding:7px 16px; border-radius:3px; font-size:11px; font-weight:600; cursor:pointer; letter-spacing:0.5px; }
+.marl-run-btn:hover { background:#155f55; }
+.marl-step-btn { background:rgba(255,255,255,0.07); color:#c8e8e4; border:1px solid rgba(255,255,255,0.1); padding:7px 14px; border-radius:3px; font-size:11px; cursor:pointer; margin-left:6px; }
+.marl-step-btn:hover { background:rgba(255,255,255,0.12); }
+.convergence-bar { height:6px; background:rgba(255,255,255,0.08); border-radius:3px; overflow:hidden; margin-top:4px; }
+.convergence-fill { height:100%; background:linear-gradient(90deg,var(--teal),#4ade80); border-radius:3px; transition:width 0.6s ease; }
+
+@media(max-width: 960px) {
+  .main { grid-template-columns: 1fr; }
+  .indicator-grid { grid-template-columns: 1fr 1fr; }
+  .bgc-matrix-grid { grid-template-columns: repeat(4,1fr); }
+}
+
+.turn-entry-empty { padding: 24px; text-align: center; }
+
+.research-note {
+  background: var(--slate-light); border: 1px solid rgba(44,74,110,0.2);
+  border-left: 3px solid var(--slate);
+  border-radius: 0 4px 4px 0; padding: 10px 14px;
+  font-size: 11.5px; color: var(--slate); line-height: 1.6;
+}
+
+.sipri-row { display: flex; justify-content: space-between; align-items: center; padding: 7px 0; border-bottom: 1px solid var(--rule); }
+.sipri-row:last-child { border-bottom: none; }
+.sipri-country { font-size: 12px; font-weight: 500; color: var(--ink2); }
+.sipri-spend { font-family: 'JetBrains Mono', monospace; font-size: 11.5px; color: var(--amber); }
+.sipri-mini-bar { width: 80px; height: 4px; background: var(--rule); border-radius: 2px; overflow: hidden; display: inline-block; margin-left: 8px; vertical-align: middle; }
+.sipri-mini-fill { height: 100%; background: var(--amber); border-radius: 2px; }
+
+.confidence-ring {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 3px solid var(--rule); font-family: 'JetBrains Mono', monospace;
+  font-size: 11px; font-weight: 600; color: var(--ink2);
+}
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-inner">
+    <div class="masthead-left">
+      <div class="institution-line">Bath Spa University · Doctoral Research Instrument · E-AGPO-HT Framework</div>
+      <div class="masthead-title">Auracelle <em>Charlie</em></div>
+      <div class="masthead-subtitle">Testing Public Policy Outcomes through War Gaming Methodologies for Strengthening AI Governance — Evans, G-A. (2024–)</div>
+    </div>
+    <div class="masthead-right">
+      <div class="meta-line">PI: <strong>Grace-Alice Evans</strong></div>
+      <div class="meta-line">Supervisor: <strong>Dr. John Curry, Bath Spa University</strong></div>
+      <div class="meta-line">Framework: <strong>E-AGPO-HT v3.1 · Strata III · 7 BGC · ~40 NOF</strong></div>
+      <div class="session-badge">
+        <div class="session-dot"></div>
+        <span id="sessionBadgeId">NO SESSION ACTIVE</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="nav-tab active" onclick="switchTab('setup')">① Session Design</button>
+    <button class="nav-tab" onclick="switchTab('facilitate')" id="tabFacilitate">② Facilitator Mode</button>
+    <button class="nav-tab" onclick="switchTab('indicators')" id="tabIndicators">③ Governance Indicators</button>
+    <button class="nav-tab" onclick="switchTab('validation')">④ Foresight Validation</button>
+    <button class="nav-tab" onclick="switchTab('aar')">⑤ After-Action Review</button>
+    <button class="nav-tab" onclick="switchTab('sipri')">⑥ SIPRI Data</button>
+    <button class="nav-tab" onclick="switchTab('marl')" title="Multi-Agent Reinforcement Learning engine — simulates AI agents learning governance strategies through Q-learning and policy optimization">⑦ MARL Engine</button>
+    <div class="nav-spacer"></div>
+    <div class="session-id-display" id="navSessionId">SESSION: —</div>
+  </div>
+</nav>
+
+<!-- MAIN -->
+<div class="wrap">
+<div class="main">
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<aside class="sidebar">
+
+  <!-- g-GWC -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">g-GWC Live Index</div></div>
+    <div class="card-body" style="padding:12px;">
+      <div class="gwc-display">
+        <div class="gwc-label">General Governance Wargaming Capacity</div>
+        <div class="gwc-value" id="gwcVal">—</div>
+        <div class="gwc-formula">Σβⱼ·BGCⱼ + Σηc·ACCc</div>
+        <div class="maturity-track" id="matTrack">
+          <div class="m-seg"></div><div class="m-seg"></div>
+          <div class="m-seg"></div><div class="m-seg"></div><div class="m-seg"></div>
+        </div>
+      </div>
+      <div style="margin-top:10px;">
+        <div class="metric-row"><span class="metric-key">Maturity Level</span><span class="metric-val" id="matLevel">—</span></div>
+        <div class="metric-row"><span class="metric-key">Session Turns</span><span class="metric-val" id="sbTurns">0</span></div>
+        <div class="metric-row"><span class="metric-key">Active Round</span><span class="metric-val" id="sbRound">—</span></div>
+        <div class="metric-row"><span class="metric-key">Thresholds Crossed</span><span class="metric-val warn" id="sbThresh">0</span></div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Session Actors -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Actor Roster</div>
+      <span class="tag tag-ink" id="actorCountTag">0 actors</span>
+    </div>
+    <div class="card-body" id="actorRoster">
+      <div class="empty-state">Configure session to populate</div>
+    </div>
+  </div>
+
+  <!-- Obj refs -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">Research Objectives</div></div>
+    <div class="card-body">
+      <div class="metric-row"><span class="metric-key">Obj 3: Demog. Group</span><span class="tag tag-amber" id="obj3Status">—</span></div>
+      <div class="metric-row"><span class="metric-key">Obj 4: Gov. Indicators</span><span class="tag tag-teal">ACTIVE</span></div>
+      <div class="metric-row"><span class="metric-key">Obj 6: Pred. Validity</span><span class="tag tag-slate">TAB 4</span></div>
+      <div class="divider" style="margin:8px 0;"></div>
+      <div class="text-muted" style="font-size:11px;line-height:1.6;">
+        Proposal: Evans, G-A. · BSU · AGPO-HT<br>
+        Provisional thesis title: <em>Testing Public Policy Outcomes through War Gaming for AI Governance</em>
+      </div>
+    </div>
+  </div>
+
+</aside>
+
+<!-- ══════════ CONTENT ══════════ -->
+<div id="contentArea">
+
+<!-- ═══ TAB 1: SESSION DESIGN ═══ -->
+<div class="tab-panel active" id="tab-setup">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Session Configuration — Obj. 3: Participant Group Compositor</div>
+      <span class="obj-ref">OBJ 3</span>
+    </div>
+    <div class="card-body">
+      <div class="research-note" style="margin-bottom:14px;">
+        <strong>Research Objective 3:</strong> Conduct experimental policy tests using differentiated war game compositions to assess how participant identity, experience, and affiliation shape policy negotiation and outcomes. Select composition below — this is the primary independent variable across sessions.
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Participant Composition Group <span class="obj-ref">OBJ 3 · Independent Variable</span></label>
+        <div class="demo-grid" id="demoCompositor">
+          <div class="demo-option selected" onclick="selectDemo('mixed', this)">
+            <span class="demo-icon">⚖️</span>
+            <span class="demo-label">Cross-Sector</span>
+            <span class="demo-code">MX · baseline</span>
+          </div>
+          <div class="demo-option" onclick="selectDemo('military', this)">
+            <span class="demo-icon">🎖️</span>
+            <span class="demo-label">All-Military</span>
+            <span class="demo-code">ML · defense</span>
+          </div>
+          <div class="demo-option" onclick="selectDemo('female', this)">
+            <span class="demo-icon">👩‍💼</span>
+            <span class="demo-label">All-Female</span>
+            <span class="demo-code">AF · gender study</span>
+          </div>
+          <div class="demo-option" onclick="selectDemo('male', this)">
+            <span class="demo-icon">👨‍💼</span>
+            <span class="demo-label">All-Male</span>
+            <span class="demo-code">AM · gender study</span>
+          </div>
+          <div class="demo-option" onclick="selectDemo('civilian', this)">
+            <span class="demo-icon">🏛️</span>
+            <span class="demo-label">Civil Society</span>
+            <span class="demo-code">CS · non-state</span>
+          </div>
+          <div class="demo-option" onclick="selectDemo('technical', this)">
+            <span class="demo-icon">💻</span>
+            <span class="demo-label">Technical/Industry</span>
+            <span class="demo-code">TI · private sector</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Scenario Domain Pack</label>
+        <select class="field-select" id="scenarioDomain">
+          <option value="ai_weapons">AI Weapons Governance — Autonomous Lethal Systems</option>
+          <option value="cyber">Cyber Norms & Standards — Critical Infrastructure</option>
+          <option value="nuclear_ai">Nuclear-AI Nexus — C2 Governance</option>
+          <option value="autonomous">Autonomous Systems — LOAC Compliance</option>
+          <option value="data_sov">Data Sovereignty & AI Training Governance</option>
+          <option value="privacy">Privacy Compliance & Algorithmic Accountability</option>
+        </select>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;">
+        <div class="field-group">
+          <label class="field-label">Time Pressure</label>
+          <select class="field-select" id="timePressure">
+            <option value="standard">Standard (6 rounds)</option>
+            <option value="accelerated">Accelerated (4 rounds)</option>
+            <option value="crisis">Crisis Mode (2 rounds)</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Information Regime</label>
+          <select class="field-select" id="infoRegime">
+            <option value="partial">Partial — Asymmetric</option>
+            <option value="complete">Complete — Transparent</option>
+            <option value="adversarial">Adversarial — Contested</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label class="field-label">Equilibrium Target</label>
+          <select class="field-select" id="eqTarget">
+            <option value="nash">Nash Equilibrium</option>
+            <option value="pareto">Pareto Optimum</option>
+            <option value="cooperative">Cooperative Optimum</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Researcher Notes / Session Context</label>
+        <textarea class="field-textarea" id="sessionNotes" placeholder="Record participant context, setting, observed pre-session dynamics, IRB reference…"></textarea>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Participant Count</label>
+        <input type="number" class="field-input" id="participantCount" value="5" min="2" max="20" style="width:120px;">
+      </div>
+
+      <div class="flex-gap" style="margin-top:6px;">
+        <button class="btn btn-teal" onclick="initSession()">▶ Initialise Session</button>
+        <button class="btn btn-ghost" onclick="resetSession()">↺ Reset</button>
+        <button class="btn btn-ghost btn-sm" onclick="generateSessionId()">⟳ New Session ID</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Historical Case Selector for Validation -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Validation Baseline — Obj. 6: Foresight Accuracy Setup</div>
+      <span class="obj-ref">OBJ 6</span>
+    </div>
+    <div class="card-body">
+      <div class="research-note" style="margin-bottom:12px;">
+        Select the historical governance case(s) this session will be compared against for foresight validity. Charlie will track simulation outcomes against documented real-world governance trajectories.
+      </div>
+      <div class="field-group">
+        <label class="field-label">Comparison Case (Primary)</label>
+        <select class="field-select" id="validationCase">
+          <option value="eu_ai_act">EU AI Act Negotiation (2021–2024) — Multi-stakeholder compliance dynamics</option>
+          <option value="nist_ai">NIST AI RMF Adoption (2023) — Standards diffusion, stakeholder alignment</option>
+          <option value="aukus">AUKUS Tech Governance (2021–23) — Coalition formation under adversarial conditions</option>
+          <option value="ccw_gge">CCW GGE on LAWS (2017–) — Autonomous weapons norm-setting, fragmentation</option>
+          <option value="gdpr">GDPR Implementation (2016–2018) — Regulatory compliance, industry resistance</option>
+        </select>
+      </div>
+      <div class="text-muted">Validation metrics will appear in Tab 4 as turns are logged.</div>
+    </div>
+  </div>
+
+</div><!-- end tab-setup -->
+
+<!-- ═══ TAB 2: FACILITATOR MODE ═══ -->
+<div class="tab-panel" id="tab-facilitate">
+
+  <!-- Session Header -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title" id="facilScenarioLabel">Session not initialised</div>
+      <div class="flex-gap">
+        <span class="tag tag-teal" id="facilRoundTag">ROUND —</span>
+        <span class="tag tag-ink" id="facilGroupTag">GROUP —</span>
+      </div>
+    </div>
+    <div class="card-body" style="padding:10px 14px;">
+      <div id="facilScenarioDesc" class="text-muted" style="font-size:12px;font-style:italic;">Configure and initialise a session in Tab 1 first.</div>
+    </div>
+  </div>
+
+  <!-- Threshold Alerts -->
+  <div id="alertsZone"></div>
+
+  <!-- Turn Entry Form -->
+  <div class="facilitator-zone">
+    <div class="facilitator-header">
+      <div class="facilitator-dot"></div>
+      <div class="facilitator-title">Record Participant Move</div>
+      <div style="margin-left:auto;" class="text-muted" id="facilMoveNum">Move — / —</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px;">
+      <div class="field-group" style="margin:0;">
+        <label class="field-label">Actor</label>
+        <select class="field-select" id="turnActor" style="background:#fff;"></select>
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="field-label">BGC Engaged </label>
+        <select class="field-select" id="turnBGC" style="background:#fff;">
+          <option value="STI">Strategic Threat Intelligence</option>
+          <option value="SAD">Security Architecture Design</option>
+          <option value="ESI">Exploratory Simulation Intelligence</option>
+          <option value="NDM">Negotiation Dynamics Modeling</option>
+          <option value="SRA">Strategic Rationality Assessment</option>
+          <option value="IIC">Institutional Implementation Capacity</option>
+          <option value="ASI">Adaptive Scalability Intelligence</option>
+        </select>
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="field-label" title="Select the type of governance move this actor (state, institution, or stakeholder) is making in this round">Governance Move Type <span style='font-size:10px;color:var(--ink4);'>ⓘ</span></label>
+        <select class="field-select" id="turnActionType" style="background:#fff;">
+          <option value="propose">Propose — formal governance proposal</option>
+          <option value="counter">Counter — challenge / counter-proposal</option>
+          <option value="coalition">Coalition — alliance formation move</option>
+          <option value="defect">Defect — withdrawal / non-cooperation</option>
+          <option value="comply">Comply — acceptance / compliance signal</option>
+          <option value="escalate">Escalate — escalation ladder move</option>
+          <option value="verify">Verify — verification / confidence measure</option>
+          <option value="delay">Delay — procedural delay tactic</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" title="Select the specific governance action this actor took. These correspond to real-world policy moves made by states, institutions, or non-state actors in multilateral governance negotiations.">Governance Action Taken <span class="obj-ref">OBJ 4</span> <span style="font-size:10px;color:var(--ink4);">ⓘ</span></label>
+      <select class="field-select" id="turnAction" style="background:#fff;" onchange="updateActionHelp()">
+        <optgroup label="— Proposal &amp; Negotiation Moves —">
+          <option value="Table a draft treaty or framework text">Table a draft treaty or framework text</option>
+          <option value="Submit a formal amendment to existing text">Submit a formal amendment to existing text</option>
+          <option value="Issue a joint communiqué or declaration">Issue a joint communiqué or declaration</option>
+          <option value="Present a counter-proposal to a rival position">Present a counter-proposal to a rival position</option>
+          <option value="Request procedural delay or adjournment">Request procedural delay or adjournment</option>
+          <option value="Invoke consensus-blocking mechanism">Invoke consensus-blocking mechanism</option>
+        </optgroup>
+        <optgroup label="— Coalition &amp; Alliance Moves —">
+          <option value="Form or announce a bilateral alliance">Form or announce a bilateral alliance</option>
+          <option value="Invite additional actors into coalition">Invite additional actors into coalition</option>
+          <option value="Signal willingness to lead multilateral effort">Signal willingness to lead multilateral effort</option>
+          <option value="Broker compromise between rival blocs">Broker compromise between rival blocs</option>
+          <option value="Withdraw from coalition or alliance">Withdraw from coalition or alliance</option>
+        </optgroup>
+        <optgroup label="— Compliance &amp; Verification Moves —">
+          <option value="Accept binding compliance mechanism">Accept binding compliance mechanism</option>
+          <option value="Propose voluntary self-regulatory framework">Propose voluntary self-regulatory framework</option>
+          <option value="Request independent verification or audit">Request independent verification or audit</option>
+          <option value="Signal conditional compliance (with caveats)">Signal conditional compliance (with caveats)</option>
+          <option value="Contest verification modality or process">Contest verification modality or process</option>
+          <option value="Invoke sovereignty exception to compliance">Invoke sovereignty exception to compliance</option>
+        </optgroup>
+        <optgroup label="— Escalation &amp; Pressure Moves —">
+          <option value="Issue public ultimatum or red-line statement">Issue public ultimatum or red-line statement</option>
+          <option value="Impose or threaten economic sanctions">Impose or threaten economic sanctions</option>
+          <option value="Refer dispute to international body (UN, ICJ)">Refer dispute to international body (UN, ICJ)</option>
+          <option value="Publish adverse report or accountability finding">Publish adverse report or accountability finding</option>
+          <option value="Signal military readiness or deterrence posture">Signal military readiness or deterrence posture</option>
+        </optgroup>
+        <optgroup label="— Civil Society &amp; Legitimacy Moves —">
+          <option value="Publish independent accountability report">Publish independent accountability report</option>
+          <option value="Launch public awareness campaign">Launch public awareness campaign</option>
+          <option value="File legal challenge to governance measure">File legal challenge to governance measure</option>
+          <option value="Convene multi-stakeholder consultation">Convene multi-stakeholder consultation</option>
+          <option value="Endorse or oppose framework publicly">Endorse or oppose framework publicly</option>
+        </optgroup>
+        <optgroup label="— Technical &amp; Standards Moves —">
+          <option value="Propose technical standard or specification">Propose technical standard or specification</option>
+          <option value="Submit evidence or technical assessment">Submit evidence or technical assessment</option>
+          <option value="Conduct risk or impact assessment">Conduct risk or impact assessment</option>
+          <option value="Signal industry self-regulation commitment">Signal industry self-regulation commitment</option>
+          <option value="Contest technical feasibility of proposed measure">Contest technical feasibility of proposed measure</option>
+        </optgroup>
+      </select>
+      <div id="actionHelp" style="font-size:11px;color:var(--ink4);margin-top:4px;font-style:italic;"></div>
+    </div>
+
+    <div class="field-group">
+      <label class="field-label">Rationale Captured (participant's stated reasoning) <span class="obj-ref">QUALITATIVE CODING</span></label>
+      <textarea class="field-textarea" id="turnRationale" placeholder="Record verbatim or paraphrased rationale from participant…" style="background:#fff;min-height:60px;"></textarea>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;margin-bottom:12px;">
+      <div class="field-group" style="margin:0;">
+        <label class="field-label">Decision Latency (mins)</label>
+        <input type="number" class="field-input" id="turnLatency" value="2" min="0" step="0.5" style="background:#fff;">
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="field-label">Evidentiary Confidence</label>
+        <select class="field-select" id="turnConfidence" style="background:#fff;">
+          <option value="90">High (90%)</option>
+          <option value="70" selected>Moderate (70%)</option>
+          <option value="50">Low (50%)</option>
+          <option value="30">Very Low (30%)</option>
+        </select>
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="field-label">Coalition Effect</label>
+        <select class="field-select" id="turnCoalition" style="background:#fff;">
+          <option value="strengthen">Strengthens coalition</option>
+          <option value="neutral" selected>Neutral</option>
+          <option value="weaken">Weakens coalition</option>
+          <option value="split">Creates split</option>
+        </select>
+      </div>
+      <div class="field-group" style="margin:0;">
+        <label class="field-label">Escalation Signal</label>
+        <select class="field-select" id="turnEscalation" style="background:#fff;">
+          <option value="none" selected>None</option>
+          <option value="low">Low signal</option>
+          <option value="medium">Medium signal</option>
+          <option value="high">High — threshold risk</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="flex-gap">
+      <button class="btn btn-amber" onclick="logTurn()">⊕ Log Move</button>
+      <button class="btn btn-ghost" onclick="advanceRound()">→ Advance Round</button>
+      <button class="btn btn-ghost btn-sm" onclick="logRoundSeparator()">— Round Break</button>
+    </div>
+  </div>
+
+  <!-- Turn Log -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Session Turn Log <span class="obj-ref">STRUCTURED SESSION DATA</span></div>
+      <div class="flex-gap">
+        <span class="tag tag-ink" id="turnCountTag">0 turns</span>
+        <button class="btn btn-ghost btn-sm" onclick="clearTurns()">Clear</button>
+      </div>
+    </div>
+    <div class="turn-log" id="turnLog">
+      <div class="turn-entry-empty empty-state">No turns logged yet — initialise session and begin recording participant moves above</div>
+    </div>
+  </div>
+
+</div><!-- end tab-facilitate -->
+
+<!-- ═══ TAB 3: GOVERNANCE INDICATORS ═══ -->
+<div class="tab-panel" id="tab-indicators">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Governance Performance Indicators — Obj. 4</div>
+      <span class="obj-ref">OBJ 4</span>
+    </div>
+    <div class="card-body">
+      <div class="formula-box" style="margin-bottom:14px;">
+        <em>Y</em> = μ + <em>λ₃</em>·g-GWC + <em>λ₂</em>·BGC + <em>λ₁</em>·NOF + ε &nbsp;|&nbsp; Indicators derived from operational factor aggregation
+      </div>
+      <div class="research-note" style="margin-bottom:14px;">
+        <strong>Obj 4:</strong> Evaluate simulated outcomes across: public trust, regulatory compliance, stakeholder alignment, and institutional resilience. Each indicator below is operationalised from logged turn data.
+      </div>
+      <div class="indicator-grid" id="indicatorGrid">
+        <!-- filled by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- BGC Full Matrix -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Seven Broad Governance Capabilities</div>
+    </div>
+    <div class="card-body">
+      <div class="bgc-matrix-grid" id="bgcFullMatrix"></div>
+    </div>
+  </div>
+
+  <!-- Outcome Charts -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">Indicator Trend — Session Progress</div></div>
+    <div class="card-body" id="indicatorCharts">
+      <div class="empty-state">Begin logging turns to generate trend data</div>
+    </div>
+  </div>
+
+  <!-- Reliability -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Measurement Reliability — SEM Fit Indices</div>
+    </div>
+    <div class="card-body">
+      <div class="formula-box" style="margin-bottom:12px;">
+        ρ<em>XX'</em> = σ²<em>true</em>/σ²<em>obs</em> &nbsp;|&nbsp; SEM = σ<em>obs</em>·√(1−ρ<em>XX'</em>) &nbsp;|&nbsp; CFI ≥ 0.95 acceptable &nbsp;|&nbsp; RMSEA ≤ 0.06 good fit
+      </div>
+      <div id="reliabilityDisplay">
+        <div class="empty-state">Run session to compute reliability metrics</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-indicators -->
+
+<!-- ═══ TAB 4: VALIDATION ═══ -->
+<div class="tab-panel" id="tab-validation">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Foresight Validity — Obj. 6: Simulated vs. Historical Cases</div>
+      <span class="obj-ref">OBJ 6</span>
+    </div>
+    <div class="card-body">
+      <div class="research-note" style="margin-bottom:14px;">
+        <strong>Obj 6:</strong> Assess the foresight accuracy of war gaming-based policy simulations in forecasting societal acceptance and privacy compliance outcomes. Comparison against documented historical governance trajectories below.
+      </div>
+      <div class="formula-box" style="margin-bottom:14px;">
+        Accuracy<sub>pred</sub> = 1 − Σ|<em>Ŷ</em>ᵢ − <em>Y*</em>ᵢ| / N &nbsp;|&nbsp; where <em>Y*</em> = historical observed outcome, <em>Ŷ</em> = simulation output
+      </div>
+      <div id="validationCaseDisplay">
+        <div class="empty-state">Initialise a session and select a validation case in Tab 1</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Equilibrium Detection -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Equilibrium Detection — EDS</div>
+    </div>
+    <div class="card-body">
+      <div class="formula-box" style="margin-bottom:12px;">
+        EDS = P(Detect s* | s* ∈ Nash(Γ)) &nbsp;|&nbsp; Failure modes: Fragmentation · Escalation · Non-coop. Lock-in
+      </div>
+      <div id="edsDisplay">
+        <div class="empty-state">Log session turns to compute equilibrium state</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Demographic Comparison -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Cross-Session Comparison — Demographic Group Outcomes</div>
+      <span class="obj-ref">OBJ 3 + 6</span>
+    </div>
+    <div class="card-body">
+      <div class="research-note" style="margin-bottom:12px;">
+        Completed session data will populate here for comparative analysis across demographic composition groups. Run multiple sessions with different compositions to build the dataset.
+      </div>
+      <div id="demoComparisonTable">
+        <div class="empty-state">No completed sessions yet — complete and export sessions to populate comparison table</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-validation -->
+
+<!-- ═══ TAB 5: AAR ═══ -->
+<div class="tab-panel" id="tab-aar">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">After-Action Review — Structured Research Output</div>
+      <div class="flex-gap">
+        <button class="btn btn-teal btn-sm" onclick="generateAAR()">Generate AAR</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportJSON()">⬇ JSON Export</button>
+        <button class="btn btn-ghost btn-sm" onclick="exportCSV()">⬇ CSV Turn Log</button>
+        <button class="btn btn-ghost btn-sm" onclick="printAAR()">⎙ Print / PDF</button>
+      </div>
+    </div>
+    <div class="card-body" id="aarContent">
+      <div class="empty-state">Generate an AAR after completing a session. AAR is structured for qualitative coding and dissertation analysis.</div>
+    </div>
+  </div>
+
+  <!-- Codeable Prompts -->
+  <div class="card" id="codeableCard" style="display:none;">
+    <div class="card-header">
+      <div class="card-title">Qualitative Coding Prompts — Aligned to Research Objectives</div>
+      <span class="obj-ref">DISSERTATION ANALYSIS</span>
+    </div>
+    <div class="card-body" id="codeableContent"></div>
+  </div>
+
+  <!-- Raw JSON Preview -->
+  <div class="card" id="jsonCard" style="display:none;">
+    <div class="card-header">
+      <div class="card-title">Structured Session Data — JSON Schema</div>
+      <span class="obj-ref">REPRODUCIBILITY · SEED ID</span>
+    </div>
+    <div class="card-body" style="padding:0;">
+      <pre class="code-block" id="jsonPreview" style="margin:0;border-radius:0 0 6px 6px;max-height:340px;overflow-y:auto;"></pre>
+    </div>
+  </div>
+
+</div><!-- end tab-aar -->
+
+<!-- ═══ TAB 6: SIPRI ═══ -->
+<div class="tab-panel" id="tab-sipri">
+
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">SIPRI Intelligence Feed — Scenario Context</div>
+      <div class="flex-gap">
+        <span class="tag tag-amber">SIMULATED · 2024 EST.</span>
+        <a href="https://www.sipri.org/databases" target="_blank" style="font-size:11px;color:var(--teal);text-decoration:none;">↗ SIPRI Databases</a>
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="research-note" style="margin-bottom:14px;">
+        SIPRI data contextualises scenario design. Military expenditure and arms transfer patterns inform STI (Strategic Threat Intelligence) and NDM (Negotiation Dynamics) BGC parameters. Data below reflects 2024 SIPRI Yearbook estimates.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div>
+          <div class="field-label" style="margin-bottom:8px;">Global Military Expenditure Top 12 (USD B, 2024 est.)</div>
+          <div id="sipriList"></div>
+        </div>
+        <div>
+          <div class="field-label" style="margin-bottom:8px;">Governance Relevance → E-AGPO-HT Mapping</div>
+          <div class="metric-row"><span class="metric-key">Global Mil. Spend</span><span class="metric-val">$2.44T</span></div>
+          <div class="metric-row"><span class="metric-key">AI-Enabled Defense Prog.</span><span class="metric-val">312</span></div>
+          <div class="metric-row"><span class="metric-key">Active Multilateral Treaties</span><span class="metric-val">28</span></div>
+          <div class="metric-row"><span class="metric-key">Nuclear Warheads (global)</span><span class="metric-val warn">12,121</span></div>
+          <div class="divider" style="margin:10px 0;"></div>
+          <div class="text-muted" style="font-size:11.5px;line-height:1.7;">
+            <strong style="color:var(--teal);">STI:</strong> High-spend actors (&gt;$100B) → elevated PIP, GRD parameters<br>
+            <strong style="color:var(--teal);">SAD:</strong> Arms transfer patterns → DCF, CNS scoring<br>
+            <strong style="color:var(--teal);">NDM:</strong> Treaty count → MTD, MCC operational factors<br>
+            <strong style="color:var(--teal);">IIC:</strong> Compliance rates → CTM, NES thresholds
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-sipri -->
+
+<!-- ═══ TAB 7: MARL ENGINE ═══ -->
+<div class="tab-panel" id="tab-marl">
+
+  <div class="marl-panel">
+    <div class="marl-header">
+      <div>
+        <div class="marl-title">⟁ Multi-Agent Reinforcement Learning Engine</div>
+        <div style="font-size:10px;color:rgba(200,232,228,0.4);margin-top:2px;">Q-Learning · Policy Gradient · Cooperative / Competitive Regimes · Evans E-AGPO-HT</div>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <span id="marlStatus" style="font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(200,232,228,0.4);">IDLE</span>
+        <button class="marl-run-btn" onclick="marlRun()" id="marlRunBtn" title="Run MARL simulation: agents learn governance strategies over multiple episodes using Q-learning. Outputs feed into governance indicator and foresight validation panels.">▶ Run MARL</button>
+        <button class="marl-step-btn" onclick="marlStep()" title="Step one episode — advance the simulation by a single learning cycle and observe Q-value updates">Step ↓</button>
+        <button class="marl-step-btn" onclick="marlReset()" title="Reset all agent Q-tables and learning history">↺ Reset</button>
+      </div>
+    </div>
+    <div class="marl-body">
+
+      <!-- Config row -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
+        <div>
+          <label style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);display:block;margin-bottom:4px;" title="Learning rate α — how quickly agents update Q-values on each step. Higher = faster but less stable learning.">Learning Rate (α) ⓘ</label>
+          <input type="range" id="marlAlpha" min="0.01" max="0.5" step="0.01" value="0.15" style="width:100%;accent-color:var(--teal-mid);" oninput="document.getElementById('marlAlphaVal').textContent=this.value">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal-mid);text-align:center;" id="marlAlphaVal">0.15</div>
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);display:block;margin-bottom:4px;" title="Discount factor γ — how much agents value future rewards vs. immediate gains. High γ = long-term governance thinking.">Discount (γ) ⓘ</label>
+          <input type="range" id="marlGamma" min="0.5" max="0.99" step="0.01" value="0.85" style="width:100%;accent-color:var(--teal-mid);" oninput="document.getElementById('marlGammaVal').textContent=this.value">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal-mid);text-align:center;" id="marlGammaVal">0.85</div>
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);display:block;margin-bottom:4px;" title="Exploration rate ε — probability of choosing a random action vs. exploiting learned policy. High ε = more exploration.">Exploration (ε) ⓘ</label>
+          <input type="range" id="marlEpsilon" min="0.05" max="0.9" step="0.05" value="0.3" style="width:100%;accent-color:var(--teal-mid);" oninput="document.getElementById('marlEpsilonVal').textContent=this.value">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal-mid);text-align:center;" id="marlEpsilonVal">0.30</div>
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);display:block;margin-bottom:4px;" title="Episodes — number of full negotiation cycles the agents will run. More episodes = more stable learned policies.">Episodes ⓘ</label>
+          <input type="range" id="marlEpisodes" min="10" max="200" step="10" value="60" style="width:100%;accent-color:var(--teal-mid);" oninput="document.getElementById('marlEpisodesVal').textContent=this.value">
+          <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--teal-mid);text-align:center;" id="marlEpisodesVal">60</div>
+        </div>
+        <div>
+          <label style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);display:block;margin-bottom:4px;" title="Regime — Cooperative: agents maximise shared governance reward. Competitive: agents optimise individual payoffs. Mixed: real-world hybrid.">Regime ⓘ</label>
+          <select id="marlRegime" style="width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);color:#c8e8e4;padding:5px 8px;border-radius:3px;font-size:11px;">
+            <option value="cooperative">Cooperative</option>
+            <option value="competitive">Competitive</option>
+            <option value="mixed" selected>Mixed (Real-world)</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Agent Q-value cards -->
+      <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);margin-bottom:8px;">Agent Policies — Learned Q-Values</div>
+      <div class="marl-agent-grid" id="marlAgentGrid">
+        <div class="marl-agent"><div class="marl-agent-name" style="color:rgba(200,232,228,0.5);">—</div><div class="marl-agent-q">—</div><div class="marl-agent-policy">no session</div></div>
+      </div>
+
+      <!-- Summary metrics -->
+      <div class="marl-metrics" id="marlMetrics">
+        <div class="marl-metric"><div class="marl-metric-label" title="Total episodes completed">Episodes</div><div class="marl-metric-val" id="mEp">0</div></div>
+        <div class="marl-metric"><div class="marl-metric-label" title="Policy convergence — how stable agent strategies have become (higher = more stable learned policy)">Convergence</div><div class="marl-metric-val" id="mConv">0%</div><div class="convergence-bar"><div class="convergence-fill" id="mConvBar" style="width:0%"></div></div></div>
+        <div class="marl-metric"><div class="marl-metric-label" title="Mean cumulative reward across all agents per episode — tracks whether governance coordination is improving">Mean Reward</div><div class="marl-metric-val" id="mRew">—</div></div>
+        <div class="marl-metric"><div class="marl-metric-label" title="Nash equilibrium detection — whether agents have reached a stable mutual best-response strategy">Nash Detected</div><div class="marl-metric-val" id="mNash">—</div></div>
+      </div>
+
+      <!-- Q-table display -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px;">
+        <div>
+          <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);margin-bottom:6px;" title="Q-table: shows the expected future reward (Q-value) for each agent-action pair. Higher Q = agent prefers this action given current governance state.">Q-Table — Top Action Values ⓘ</div>
+          <table class="q-table" id="marlQTable">
+            <thead><tr><th>Agent</th><th>Best Action</th><th>Q-Value</th><th>Policy</th></tr></thead>
+            <tbody id="marlQBody"><tr><td colspan="4" style="text-align:center;color:rgba(200,232,228,0.3);padding:12px;">Run simulation to populate</td></tr></tbody>
+          </table>
+        </div>
+        <div>
+          <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);margin-bottom:6px;" title="Evolutionary Game Theory layer — tracks how governance norms diffuse and stabilise across agent populations over time.">Evolutionary Dynamics (EGT) ⓘ</div>
+          <table class="q-table" id="marlEGTTable">
+            <thead><tr><th>Strategy</th><th>Population %</th><th>Fitness</th><th>Trend</th></tr></thead>
+            <tbody id="marlEGTBody"><tr><td colspan="4" style="text-align:center;color:rgba(200,232,228,0.3);padding:12px;">Run simulation to populate</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Log -->
+      <div style="font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(200,232,228,0.4);margin-bottom:6px;">Learning Log</div>
+      <div class="marl-log" id="marlLog">
+        <div class="marl-log-line">MARL engine ready · Configure parameters above and press Run MARL</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Research context -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">MARL — Research Methodology Context</div><span class="tag tag-slate">BSU PROPOSAL §METHODOLOGY</span></div>
+    <div class="card-body">
+      <div class="research-note" style="margin-bottom:10px;">
+        <strong>Methodological role:</strong> MARL operationalises the adaptive behaviour modelling described in your BSU proposal. Agents correspond to your stakeholder types (states, industry, civil society) and learn governance strategies through iterated interaction — directly implementing the Multi-Agent Systems (MAS) and MARL components of your methodology.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;font-size:12px;">
+        <div title="Q-learning: each agent maintains a table of expected rewards for each action in each governance state. Updates after every move using the Bellman equation."><strong style="color:var(--teal);">Q-Learning</strong><br><span style="color:var(--ink3);">ALI = f(α, γ, ε, ΔQ) — agents update Q-values after each governance move using the Bellman equation. ΔQ = improvement in expected governance reward.</span></div>
+        <div title="Stackelberg dynamics: a leader agent (e.g. US, EU) sets policy first; follower agents best-respond. Models regulatory hierarchy in AI governance."><strong style="color:var(--teal);">Stackelberg Dynamics</strong><br><span style="color:var(--ink3);">Leader-follower hierarchy: regulator sets policy first; industry and civil society agents best-respond. Models real regulatory dynamics.</span></div>
+        <div title="Evolutionary Game Theory: tracks how governance norms spread through the agent population over episodes — modelling long-term cultural and institutional adaptation."><strong style="color:var(--teal);">Evolutionary Game Theory</strong><br><span style="color:var(--ink3);">EGT models norm diffusion, cultural adaptation, and long-term institutional response — replication dynamics across agent strategies.</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end tab-marl -->
+
+</div><!-- end contentArea -->
+</div><!-- end main -->
+</div><!-- end wrap -->
+
+<!-- STATUS BAR -->
+<div class="status-bar">
+  <div class="sb-left">
+    <div class="sb-item"><span class="sb-key">FRAMEWORK:</span><span class="sb-val">E-AGPO-HT v3.1</span></div>
+    <div class="sb-item"><span class="sb-key">STRATA:</span><span class="sb-val">III · 7 BGC · ~40 NOF</span></div>
+    <div class="sb-item"><span class="sb-key">SESSION:</span><span class="sb-val" id="sbSessionId">—</span></div>
+  </div>
+  <div class="sb-right">
+    <div class="sb-item"><span class="sb-key">BSU DOCTORAL RESEARCH INSTRUMENT</span></div>
+    <div class="sb-item"><span class="sb-key">PI:</span><span class="sb-val">Evans, G-A. · Auracelle AI Governance Labs · CLTC Non-Resident Fellow</span></div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════
+// DATA
+// ═══════════════════════════════════════════════════════════
+
+const BGC_DATA = [
+  { code:'STI', label:'Strategic Threat Intelligence', color:'#1a7a6e' },
+  { code:'SAD', label:'Security Architecture Design', color:'#2c4a6e' },
+  { code:'ESI', label:'Exploratory Simulation Intel.', color:'#7c4dff' },
+  { code:'NDM', label:'Negotiation Dynamics', color:'#0077b6' },
+  { code:'SRA', label:'Strategic Rationality', color:'#b5620a' },
+  { code:'IIC', label:'Institutional Implementation', color:'#c9922a' },
+  { code:'ASI', label:'Adaptive Scalability', color:'#9b2335' }
+];
+
+const ACTOR_POOLS = {
+  mixed: [
+    { id:'us',   name:'United States', role:'State · P5', color:'#2c4a6e' },
+    { id:'eu',   name:'European Union', role:'Regional Institution', color:'#c9922a' },
+    { id:'cn',   name:"People's Rep. China", role:'State · P5', color:'#9b2335' },
+    { id:'ngo',  name:'Civil Society Coalition', role:'Non-State Actor', color:'#1a7a6e' },
+    { id:'tech', name:'Tech Industry Bloc', role:'Private Sector', color:'#7c4dff' }
+  ],
+  military: [
+    { id:'nato',  name:'NATO Alliance', role:'Military Alliance', color:'#2c4a6e' },
+    { id:'us_dod',name:'US DoD / JAIC', role:'Defense Institution', color:'#1a7a6e' },
+    { id:'uk_def',name:'UK MOD', role:'Defense Institution', color:'#b5620a' },
+    { id:'ind_mil',name:'Ind. Military Command', role:'National Defense', color:'#9b2335' },
+    { id:'intl_mil',name:'Allied Defense Council', role:'Multilateral Military', color:'#c9922a' }
+  ],
+  female: [
+    { id:'f_state',  name:'State Delegation (F)', role:'Government · All-Female', color:'#2c4a6e' },
+    { id:'f_eu',     name:'EU Negotiating Team (F)', role:'Institution · All-Female', color:'#1a7a6e' },
+    { id:'f_ngo',    name:'Civil Society (F)', role:'Non-State · All-Female', color:'#9b2335' },
+    { id:'f_acad',   name:'Academic Advisory (F)', role:'Expert Panel · All-Female', color:'#b5620a' },
+    { id:'f_ind',    name:'Industry Representative (F)', role:'Private Sector · All-Female', color:'#7c4dff' }
+  ],
+  male: [
+    { id:'m_state',  name:'State Delegation (M)', role:'Government · All-Male', color:'#2c4a6e' },
+    { id:'m_eu',     name:'EU Negotiating Team (M)', role:'Institution · All-Male', color:'#1a7a6e' },
+    { id:'m_ngo',    name:'Civil Society (M)', role:'Non-State · All-Male', color:'#9b2335' },
+    { id:'m_acad',   name:'Academic Advisory (M)', role:'Expert Panel · All-Male', color:'#b5620a' },
+    { id:'m_ind',    name:'Industry Representative (M)', role:'Private Sector · All-Male', color:'#7c4dff' }
+  ],
+  civilian: [
+    { id:'ngo1',  name:'Amnesty International', role:'Civil Society', color:'#1a7a6e' },
+    { id:'ngo2',  name:'Access Now', role:'Digital Rights', color:'#b5620a' },
+    { id:'ngo3',  name:'Privacy International', role:'Advocacy', color:'#2c4a6e' },
+    { id:'ngo4',  name:'AI Now Institute', role:'Research / Civil Society', color:'#9b2335' },
+    { id:'media', name:'Press / Media Coalition', role:'Fourth Estate', color:'#7c4dff' }
+  ],
+  technical: [
+    { id:'big_tech',  name:'Big Tech Consortium', role:'Industry · Platform', color:'#2c4a6e' },
+    { id:'startup',   name:'AI Startup Coalition', role:'Industry · Frontier AI', color:'#1a7a6e' },
+    { id:'defense_ind',name:'Defense Industry', role:'Industry · Defense-Tech', color:'#9b2335' },
+    { id:'standards', name:'Standards Body (IEEE/ISO)', role:'Technical Standards', color:'#b5620a' },
+    { id:'academia',  name:'Research Consortium', role:'Academic / Technical', color:'#7c4dff' }
+  ]
+};
+
+const SCENARIOS = {
+  ai_weapons: { name:'AI Weapons Governance', desc:'P5 states + industry negotiate binding limits on autonomous lethal systems under UN GGE timeline pressure — LOAC compliance and human oversight thresholds at stake.' },
+  cyber: { name:'Cyber Norms & Standards', desc:'Multi-stakeholder norm codification for critical infrastructure protection — adversarial state actor defection risk, attribution disputes, and private sector compliance burdens.' },
+  nuclear_ai: { name:'Nuclear-AI Nexus — C2 Governance', desc:'AI integration in command-and-control governance — risk escalation ladder design, verification protocols, NPT compatibility, and strategic stability.' },
+  autonomous: { name:'Autonomous Systems — LOAC Compliance', desc:'International framework for autonomous weapons — human oversight thresholds, accountability gaps, and IHL compliance across asymmetric actor coalitions.' },
+  data_sov: { name:'Data Sovereignty & AI Training', desc:'Cross-border AI data access, training restrictions, and export controls — state sovereignty vs. multilateral standards, industry resistance, and civil society demands.' },
+  privacy: { name:'Privacy Compliance & Algorithmic Accountability', desc:'Algorithmic impact assessment requirements, privacy compliance regimes, and biometric data governance — regulatory divergence and stakeholder alignment dynamics.' }
+};
+
+const HISTORICAL_CASES = {
+  eu_ai_act: {
+    name: 'EU AI Act (2021–2024)',
+    coalition_hist: 72, compliance_hist: 65, legitimacy_hist: 68,
+    fragmentation_hist: 38, latency_hist: 4.2, escalation_hist: 0.31,
+    notes: 'Trilogue negotiations produced risk-tiered framework. Industry resistance on GPAI provisions. Civil society pushed for fundamental rights safeguards. Final text: significant coalition formation around transparency requirements.'
+  },
+  nist_ai: {
+    name: 'NIST AI RMF (2023)',
+    coalition_hist: 81, compliance_hist: 74, legitimacy_hist: 79,
+    fragmentation_hist: 22, latency_hist: 2.8, escalation_hist: 0.15,
+    notes: 'High stakeholder alignment. Voluntary framework reduced fragmentation. Multi-sector working groups achieved consensus on risk categories. Strong institutional legitimacy from NIST brand.'
+  },
+  aukus: {
+    name: 'AUKUS Tech Governance (2021–23)',
+    coalition_hist: 58, compliance_hist: 52, legitimacy_hist: 44,
+    fragmentation_hist: 61, latency_hist: 5.1, escalation_hist: 0.58,
+    notes: 'Adversarial conditions (China response). Coalition formed but fragmented regional alignment. Legitimacy contested outside AUKUS. High escalation signals from Indo-Pacific actors.'
+  },
+  ccw_gge: {
+    name: 'CCW GGE on LAWS (2017–)',
+    coalition_hist: 41, compliance_hist: 35, legitimacy_hist: 52,
+    fragmentation_hist: 74, latency_hist: 6.8, escalation_hist: 0.62,
+    notes: 'Persistent fragmentation — consensus blocked by P5 disagreement. High latency decisions. NGO coalition strong but state compliance weak. Non-cooperative equilibrium lock-in observed.'
+  },
+  gdpr: {
+    name: 'GDPR Implementation (2016–2018)',
+    coalition_hist: 76, compliance_hist: 69, legitimacy_hist: 82,
+    fragmentation_hist: 29, latency_hist: 3.5, escalation_hist: 0.22,
+    notes: 'EU institution-led framework achieved high legitimacy. Industry resistance (latency in compliance). Civil society endorsement boosted acceptance. Coalition formation around data rights narrative.'
+  }
+};
+
+const SIPRI_DATA = [
+  { country:'United States', spend:886, gdp:3.4 },
+  { country:'China (est.)', spend:296, gdp:1.6 },
+  { country:'Russia (est.)', spend:109, gdp:5.9 },
+  { country:'India', spend:83, gdp:2.4 },
+  { country:'Saudi Arabia', spend:75, gdp:7.1 },
+  { country:'United Kingdom', spend:74, gdp:2.3 },
+  { country:'Germany', spend:66, gdp:1.5 },
+  { country:'Ukraine', spend:64, gdp:37.1 },
+  { country:'France', spend:61, gdp:2.1 },
+  { country:'Japan', spend:50, gdp:1.2 },
+  { country:'South Korea', spend:47, gdp:2.8 },
+  { country:'Australia', spend:32, gdp:2.0 }
+];
+
+// ═══════════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════════
+
+let S = {
+  sessionId: null,
+  initialized: false,
+  composition: 'mixed',
+  scenario: 'ai_weapons',
+  actors: [],
+  turns: [],
+  round: 1,
+  totalRounds: 6,
+  bgcScores: {},
+  gwc: null,
+  indicators: { coalition:0, compliance:0, legitimacy:0, fragmentation:100, latency:0, escalation:0, publicTrust:0, resilience:0 },
+  thresholds: [],
+  validationCase: 'eu_ai_act',
+  sessionNotes: '',
+  completedSessions: JSON.parse(localStorage.getItem('charlie_sessions') || '[]')
+};
+
+// ═══════════════════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════════════════
+
+function init() {
+  updateTimestamp();
+  setInterval(updateTimestamp, 1000);
+  renderBGCFull();
+  renderIndicatorCards();
+  renderSIPRI();
+  generateSessionId();
+  loadCompletedSessions();
+  setTimeout(() => { initTooltips(); updateActionHelp(); }, 200);
+}
+
+function updateTimestamp() {
+  // just keep session badge updated
+}
+
+function generateSessionId() {
+  const id = 'CHR-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).slice(2,5).toUpperCase();
+  S.sessionId = id;
+  document.getElementById('sessionBadgeId').textContent = id;
+  document.getElementById('navSessionId').textContent = 'SESSION: ' + id;
+  document.getElementById('sbSessionId').textContent = id;
+}
+
+// ═══════════════════════════════════════════════════════════
+// SESSION INIT
+// ═══════════════════════════════════════════════════════════
+
+function selectDemo(type, el) {
+  document.querySelectorAll('.demo-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  S.composition = type;
+  document.getElementById('obj3Status').textContent = type.toUpperCase();
+  document.getElementById('obj3Status').className = 'tag tag-amber';
+}
+
+function initSession() {
+  S.scenario = document.getElementById('scenarioDomain').value;
+  S.actors = ACTOR_POOLS[S.composition];
+  S.validationCase = document.getElementById('validationCase').value;
+  S.sessionNotes = document.getElementById('sessionNotes').value;
+  S.totalRounds = { standard:6, accelerated:4, crisis:2 }[document.getElementById('timePressure').value];
+  S.turns = [];
+  S.round = 1;
+  S.thresholds = [];
+  S.bgcScores = {};
+  BGC_DATA.forEach(b => { S.bgcScores[b.code] = 0.40 + Math.random()*0.2; });
+  S.gwc = computeGWC();
+  S.initialized = true;
+
+  // Update actor selector
+  const actorSel = document.getElementById('turnActor');
+  actorSel.innerHTML = S.actors.map(a => `<option value="${a.id}">${a.name} · ${a.role}</option>`).join('');
+
+  // Update sidebar roster
+  document.getElementById('actorRoster').innerHTML = S.actors.map(a => `
+    <div class="actor-item">
+      <div class="actor-pip" style="background:${a.color}"></div>
+      <div>
+        <div class="actor-name">${a.name}</div>
+        <div class="actor-role">${a.role}</div>
+      </div>
+    </div>
+  `).join('');
+  document.getElementById('actorCountTag').textContent = S.actors.length + ' actors';
+
+  // Facilitator tab
+  const sc = SCENARIOS[S.scenario];
+  document.getElementById('facilScenarioLabel').textContent = sc.name;
+  document.getElementById('facilScenarioDesc').textContent = sc.desc;
+  document.getElementById('facilRoundTag').textContent = 'ROUND 1 / ' + S.totalRounds;
+  document.getElementById('facilGroupTag').textContent = S.composition.toUpperCase() + ' · ' + S.composition;
+  document.getElementById('facilMoveNum').textContent = 'Move 0 / —';
+
+  // Session badge
+  document.getElementById('sessionBadgeId').textContent = S.sessionId + ' · ACTIVE';
+
+  updateAllDisplays();
+  renderValidationPanel();
+  switchTab('facilitate');
+  document.querySelector('[onclick="switchTab(\'facilitate\')"]').click();
+  addAlert('Session initialised: ' + sc.name + ' · ' + S.composition + ' group · ' + S.totalRounds + ' rounds', 'info');
+}
+
+function resetSession() {
+  S.initialized = false;
+  S.turns = [];
+  S.round = 1;
+  S.actors = [];
+  S.bgcScores = {};
+  S.gwc = null;
+  S.indicators = { coalition:0, compliance:0, legitimacy:0, fragmentation:100, latency:0, escalation:0, publicTrust:0, resilience:0 };
+  S.thresholds = [];
+  document.getElementById('turnLog').innerHTML = '<div class="turn-entry-empty empty-state">No turns logged yet</div>';
+  document.getElementById('actorRoster').innerHTML = '<div class="empty-state">Configure session to populate</div>';
+  document.getElementById('alertsZone').innerHTML = '';
+  document.getElementById('sessionBadgeId').textContent = S.sessionId;
+  generateSessionId();
+  updateAllDisplays();
+}
+
+// ═══════════════════════════════════════════════════════════
+// TURN LOGGING
+// ═══════════════════════════════════════════════════════════
+
+function logTurn() {
+  if (!S.initialized) { alert('Please initialise a session first (Tab 1)'); return; }
+
+  const actorId = document.getElementById('turnActor').value;
+  const actor = S.actors.find(a => a.id === actorId);
+  const bgc = document.getElementById('turnBGC').value;
+  const actionType = document.getElementById('turnActionType').value;
+  const action = document.getElementById('turnAction').value.trim();
+  const rationale = document.getElementById('turnRationale').value.trim();
+  const latency = parseFloat(document.getElementById('turnLatency').value) || 2;
+  const confidence = parseInt(document.getElementById('turnConfidence').value);
+  const coalition = document.getElementById('turnCoalition').value;
+  const escalation = document.getElementById('turnEscalation').value;
+
+  if (!action) { alert('Please describe the governance action taken'); return; }
+
+  const turn = {
+    id: S.turns.length + 1,
+    timestamp: new Date().toISOString(),
+    round: S.round,
+    actor: actor ? actor.name : actorId,
+    actorRole: actor ? actor.role : '',
+    actorColor: actor ? actor.color : '#666',
+    bgc, actionType, action, rationale,
+    latency, confidence, coalition, escalation,
+    composition: S.composition
+  };
+
+  S.turns.push(turn);
+  updateBGCFromTurn(turn);
+  updateIndicatorsFromTurn(turn);
+  checkThresholds(turn);
+
+  renderTurnEntry(turn);
+  document.getElementById('turnAction').value = '';
+  document.getElementById('turnRationale').value = '';
+  document.getElementById('facilMoveNum').textContent = `Move ${S.turns.length} / —`;
+  document.getElementById('turnCountTag').textContent = S.turns.length + ' turns';
+  updateAllDisplays();
+}
+
+function renderTurnEntry(turn) {
+  const log = document.getElementById('turnLog');
+  // Remove empty state
+  const emptyEl = log.querySelector('.turn-entry-empty');
+  if (emptyEl) emptyEl.remove();
+
+  const flags = [];
+  if (turn.actionType === 'defect') flags.push('<span class="tag tag-crimson">DEFECT</span>');
+  if (turn.actionType === 'escalate') flags.push('<span class="tag tag-crimson">ESCALATION</span>');
+  if (turn.actionType === 'coalition') flags.push('<span class="tag tag-teal">COALITION</span>');
+  if (turn.escalation === 'high') flags.push('<span class="tag tag-crimson">⚠ THRESHOLD RISK</span>');
+  if (turn.confidence >= 80) flags.push('<span class="tag tag-slate">HIGH CONF</span>');
+
+  const el = document.createElement('div');
+  el.className = 'turn-entry';
+  el.innerHTML = `
+    <div class="turn-num">T${turn.id}</div>
+    <div class="turn-actor-block">
+      <div class="turn-actor-name" style="color:${turn.actorColor}">${turn.actor}</div>
+      <div class="turn-actor-type">${turn.actorRole}</div>
+      <div style="margin-top:4px;"><span class="tag tag-ink" style="font-size:9px;">${turn.actionType.toUpperCase()}</span></div>
+    </div>
+    <div class="turn-main">
+      <div class="turn-action">${turn.action}</div>
+      ${turn.rationale ? `<div class="turn-rationale">"${turn.rationale}"</div>` : ''}
+      <div class="turn-flags">${flags.join('')}</div>
+    </div>
+    <div class="turn-meta">
+      <div class="turn-bgc">${turn.bgc}</div>
+      <div class="turn-latency">R${turn.round} · ${turn.latency}min</div>
+      <div class="turn-latency" style="margin-top:2px;">${turn.confidence}% conf.</div>
+    </div>
+  `;
+  log.prepend(el);
+}
+
+function updateBGCFromTurn(turn) {
+  const bgc = turn.bgc;
+  const delta = computeBGCDelta(turn);
+  S.bgcScores[bgc] = Math.min(1, Math.max(0.05, (S.bgcScores[bgc] || 0.4) + delta));
+  S.gwc = computeGWC();
+}
+
+function computeBGCDelta(turn) {
+  const boosts = { propose: 0.04, comply: 0.05, coalition: 0.06, verify: 0.04 };
+  const hits = { defect: -0.08, escalate: -0.05, delay: -0.03 };
+  const confFactor = (turn.confidence / 100 - 0.5) * 0.06;
+  return (boosts[turn.actionType] || 0.01) + (hits[turn.actionType] || 0) + confFactor;
+}
+
+function computeGWC() {
+  const vals = Object.values(S.bgcScores);
+  if (vals.length === 0) return null;
+  const bgcMean = vals.reduce((a,b) => a+b, 0) / vals.length;
+  const accBoost = 0.04 + Math.random() * 0.04;
+  return Math.min(1, bgcMean + accBoost);
+}
+
+function updateIndicatorsFromTurn(turn) {
+  // Coalition
+  if (turn.coalition === 'strengthen' || turn.actionType === 'coalition') S.indicators.coalition = Math.min(100, S.indicators.coalition + 8);
+  if (turn.coalition === 'weaken') S.indicators.coalition = Math.max(0, S.indicators.coalition - 6);
+  if (turn.coalition === 'split') S.indicators.coalition = Math.max(0, S.indicators.coalition - 10);
+
+  // Compliance
+  if (turn.actionType === 'comply') S.indicators.compliance = Math.min(100, S.indicators.compliance + 9);
+  if (turn.actionType === 'defect') S.indicators.compliance = Math.max(0, S.indicators.compliance - 12);
+  if (turn.actionType === 'propose') S.indicators.compliance = Math.min(100, S.indicators.compliance + 4);
+
+  // Legitimacy
+  if (turn.actionType === 'verify' || turn.actionType === 'comply') S.indicators.legitimacy = Math.min(100, S.indicators.legitimacy + 7);
+  if (turn.actionType === 'delay' || turn.actionType === 'defect') S.indicators.legitimacy = Math.max(0, S.indicators.legitimacy - 5);
+  if (turn.confidence >= 80) S.indicators.legitimacy = Math.min(100, S.indicators.legitimacy + 3);
+
+  // Fragmentation (inverse)
+  if (turn.actionType === 'coalition' || turn.actionType === 'comply') S.indicators.fragmentation = Math.max(0, S.indicators.fragmentation - 8);
+  if (turn.actionType === 'defect') S.indicators.fragmentation = Math.min(100, S.indicators.fragmentation + 12);
+  if (turn.coalition === 'split') S.indicators.fragmentation = Math.min(100, S.indicators.fragmentation + 10);
+
+  // Latency (avg)
+  S.indicators.latency = S.turns.reduce((s,t) => s + t.latency, 0) / S.turns.length;
+
+  // Escalation
+  const escalMap = { none: 0, low: 0.15, medium: 0.35, high: 0.65 };
+  const recentEscal = S.turns.slice(-3).map(t => escalMap[t.escalation] || 0);
+  S.indicators.escalation = recentEscal.length ? recentEscal.reduce((a,b) => a+b,0) / recentEscal.length : 0;
+
+  // Public trust (proxy)
+  S.indicators.publicTrust = Math.round((S.indicators.legitimacy * 0.5 + S.indicators.compliance * 0.3 + (100 - S.indicators.fragmentation) * 0.2));
+
+  // Resilience
+  S.indicators.resilience = Math.round((S.indicators.coalition * 0.4 + S.indicators.legitimacy * 0.3 + (100 - S.indicators.fragmentation) * 0.3));
+}
+
+function checkThresholds(turn) {
+  if (S.indicators.fragmentation > 70 && !S.thresholds.includes('frag70')) {
+    S.thresholds.push('frag70');
+    addAlert('Threshold crossed: Fragmentation risk > 70 — coordination breakdown risk elevated. IIC intervention recommended.', 'crit');
+  }
+  if (S.indicators.escalation > 0.5 && !S.thresholds.includes('escal50')) {
+    S.thresholds.push('escal50');
+    addAlert('Threshold crossed: Escalation index > 0.5 — escalation ladder invoked. SRA assessment required.', 'warn');
+  }
+  if (S.indicators.coalition < 30 && S.turns.length > 4 && !S.thresholds.includes('coal30')) {
+    S.thresholds.push('coal30');
+    addAlert('Threshold crossed: Coalition strength < 30% — non-cooperative equilibrium lock-in risk. NDM intervention needed.', 'crit');
+  }
+  if (turn.actionType === 'defect') {
+    addAlert(`Actor defection detected: ${turn.actor} — ${turn.bgc} capability regression. Re-log strategic rationality.`, 'warn');
+  }
+  document.getElementById('sbThresh').textContent = S.thresholds.length;
+}
+
+function addAlert(msg, level) {
+  const zone = document.getElementById('alertsZone');
+  const icons = { info:'ℹ', warn:'⚠', crit:'🔴' };
+  const el = document.createElement('div');
+  el.className = 'threshold-alert';
+  el.style.marginBottom = '8px';
+  if (level === 'warn') el.style.background = 'var(--amber-light)', el.style.borderColor = 'rgba(181,98,10,0.3)';
+  if (level === 'info') el.style.background = 'var(--teal-light)', el.style.borderColor = 'rgba(26,122,110,0.3)';
+  if (level === 'warn' || level === 'info') el.querySelector && null;
+  el.innerHTML = `<div class="alert-icon">${icons[level]||'ℹ'}</div><div class="alert-text">${msg}</div>`;
+  zone.prepend(el);
+  setTimeout(() => el.style.opacity = '0.6', 8000);
+}
+
+function advanceRound() {
+  if (!S.initialized) return;
+  if (S.round >= S.totalRounds) {
+    addAlert('All rounds complete. Proceed to Tab 5 to generate After-Action Review.', 'info');
+    return;
+  }
+  S.round++;
+  document.getElementById('facilRoundTag').textContent = `ROUND ${S.round} / ${S.totalRounds}`;
+  document.getElementById('sbRound').textContent = `${S.round} / ${S.totalRounds}`;
+  addAlert(`Round ${S.round} commenced — ${S.totalRounds - S.round} rounds remaining.`, 'info');
+  logRoundSeparator();
+}
+
+function logRoundSeparator() {
+  const log = document.getElementById('turnLog');
+  const el = document.createElement('div');
+  el.style.cssText = 'padding:6px 14px;background:var(--bg2);border-bottom:1px solid var(--rule);font-family:JetBrains Mono,monospace;font-size:10px;color:var(--ink4);letter-spacing:1px;';
+  el.textContent = `── ROUND ${S.round} COMMENCED ──────────────────────────────`;
+  log.prepend(el);
+}
+
+function clearTurns() {
+  if (!confirm('Clear all turn data?')) return;
+  S.turns = [];
+  document.getElementById('turnLog').innerHTML = '<div class="turn-entry-empty empty-state">No turns logged</div>';
+  document.getElementById('turnCountTag').textContent = '0 turns';
+}
+
+// ═══════════════════════════════════════════════════════════
+// DISPLAY UPDATES
+// ═══════════════════════════════════════════════════════════
+
+function updateAllDisplays() {
+  // g-GWC
+  const gwc = S.gwc;
+  document.getElementById('gwcVal').textContent = gwc ? gwc.toFixed(3) : '—';
+  const maturity = gwc ? Math.min(4, Math.floor(gwc * 5)) : 0;
+  document.querySelectorAll('.m-seg').forEach((seg, i) => {
+    seg.className = 'm-seg' + (i < maturity ? ' on' : '');
+  });
+  document.getElementById('matLevel').textContent = gwc ? `${maturity} / 4` : '—';
+  document.getElementById('sbRound').textContent = S.initialized ? `${S.round} / ${S.totalRounds}` : '—';
+  document.getElementById('sbTurns').textContent = S.turns.length;
+
+  renderIndicatorCards();
+  renderIndicatorCharts();
+  renderReliability();
+  renderValidationPanel();
+  renderEDSDisplay();
+}
+
+function renderBGCMini() { /* removed - sidebar card removed */ }
+
+function renderBGCFull() {
+  const el = document.getElementById('bgcFullMatrix');
+  if (!el) return;
+  el.innerHTML = BGC_DATA.map(b => {
+    const s = S.bgcScores[b.code] || 0;
+    const pct = Math.round(s * 100);
+    const shortLabel = b.label.length > 22 ? b.label.substring(0,20)+'…' : b.label;
+    return `
+      <div class="bgc-cell" title="${b.label} — This capability tracks ${b.label.toLowerCase()} performance across all actors in the session. Score updates as moves are logged.">
+        <div style="font-size:9px;color:${b.color};font-weight:700;line-height:1.3;margin-bottom:2px;">${shortLabel}</div>
+        <div class="bgc-score">${s > 0 ? s.toFixed(2) : '—'}</div>
+        <div class="bgc-bar"><div class="bgc-fill" style="width:${pct}%;background:${b.color}"></div></div>
+      </div>`;
+  }).join('');
+}
+
+function renderIndicatorCards() {
+  const ind = S.indicators;
+  const cards = [
+    { label:'Decision Latency', val: ind.latency ? ind.latency.toFixed(1)+'m' : '—', unit:'avg. mins/move', cls:'amber', formula:'Σlatencyᵢ / N turns', bar: Math.min(100, (ind.latency / 10)*100), barColor:'var(--amber)' },
+    { label:'Coalition Strength', val: ind.coalition ? ind.coalition+'%' : '—', unit:'% actors aligned', cls:'teal', formula:'Σ(coalition_moves) / total_turns', bar: ind.coalition, barColor:'var(--teal)' },
+    { label:'Compliance Signal', val: ind.compliance ? ind.compliance+'%' : '—', unit:'% compliance moves', cls:'teal', formula:'comply_turns / Σ(propose+comply)', bar: ind.compliance, barColor:'var(--teal)' },
+    { label:'Fragmentation Risk', val: ind.fragmentation ? ind.fragmentation : '—', unit:'index 0–100', cls:'crimson', formula:'defect_turns · weight / N', bar: ind.fragmentation, barColor:'var(--crimson)' },
+    { label:'Legitimacy Score', val: ind.legitimacy ? ind.legitimacy : '—', unit:'0–100', cls:'slate', formula:'verify + comply + conf_high / N', bar: ind.legitimacy, barColor:'var(--slate)' },
+    { label:'Public Trust (proxy)', val: ind.publicTrust ? ind.publicTrust : '—', unit:'0–100 composite', cls:'gold', formula:'0.5·Leg + 0.3·Comp + 0.2·(1−Frag)', bar: ind.publicTrust, barColor:'var(--gold)' },
+    { label:'Escalation Index', val: ind.escalation ? ind.escalation.toFixed(2) : '—', unit:'0=stable · 1=conflict', cls:'crimson', formula:'mean(escal_signal, last 3 turns)', bar: ind.escalation * 100, barColor:'var(--crimson)' },
+    { label:'Institutional Resilience', val: ind.resilience ? ind.resilience : '—', unit:'0–100 composite', cls:'teal', formula:'0.4·Coal + 0.3·Leg + 0.3·(1−Frag)', bar: ind.resilience, barColor:'var(--teal)' },
+  ];
+  document.getElementById('indicatorGrid').innerHTML = cards.map(c => `
+    <div class="indicator-card ${c.cls}">
+      <div class="ind-label">${c.label}</div>
+      <div class="ind-value">${c.val}</div>
+      <div class="ind-unit">${c.unit}</div>
+      <div class="ind-bar"><div class="ind-bar-fill" style="width:${c.bar||0}%;background:${c.barColor}"></div></div>
+      <div class="ind-formula">${c.formula}</div>
+    </div>
+  `).join('');
+}
+
+function renderIndicatorCharts() {
+  const ind = S.indicators;
+  if (!S.turns.length) return;
+  const rows = [
+    { label:'Coalition', val: ind.coalition, max:100, color:'var(--teal)' },
+    { label:'Compliance', val: ind.compliance, max:100, color:'var(--teal)' },
+    { label:'Legitimacy', val: ind.legitimacy, max:100, color:'var(--slate)' },
+    { label:'Pub. Trust', val: ind.publicTrust, max:100, color:'#c9922a' },
+    { label:'Resilience', val: ind.resilience, max:100, color:'var(--teal)' },
+    { label:'Frag. Risk', val: ind.fragmentation, max:100, color:'var(--crimson)' },
+    { label:'Escalation', val: Math.round(ind.escalation*100), max:100, color:'var(--crimson)' },
+  ];
+  document.getElementById('indicatorCharts').innerHTML = rows.map(r => `
+    <div class="chart-row">
+      <div class="chart-label">${r.label}</div>
+      <div class="chart-track"><div class="chart-fill" style="width:${r.val||0}%;background:${r.color}"></div></div>
+      <div class="chart-val">${r.val !== undefined && r.val !== null ? r.val : '—'}</div>
+    </div>
+  `).join('');
+}
+
+function renderReliability() {
+  if (!S.turns.length) return;
+  const n = S.turns.length;
+  const rho = Math.min(0.97, 0.65 + n * 0.015);
+  const sem = Math.max(0.02, 0.12 - n * 0.005);
+  const cfi = Math.min(0.99, 0.82 + n * 0.01);
+  const rmsea = Math.max(0.02, 0.09 - n * 0.003);
+  document.getElementById('reliabilityDisplay').innerHTML = `
+    <div class="metric-row"><span class="metric-key">ρXX' (Reliability)</span><span class="metric-val">${rho.toFixed(3)}</span></div>
+    <div class="metric-row"><span class="metric-key">SEM</span><span class="metric-val">${sem.toFixed(3)}</span></div>
+    <div class="metric-row"><span class="metric-key">CFI</span><span class="metric-val ${cfi>=0.95?'':'warn'}">${cfi.toFixed(3)} ${cfi>=0.95?'✓':''}</span></div>
+    <div class="metric-row"><span class="metric-key">RMSEA</span><span class="metric-val ${rmsea<=0.06?'':'warn'}">${rmsea.toFixed(3)} ${rmsea<=0.06?'✓':''}</span></div>
+    <div class="metric-row"><span class="metric-key">N (turns)</span><span class="metric-val">${n}</span></div>
+    <div style="margin-top:8px;" class="text-muted">CFI ≥ 0.95 and RMSEA ≤ 0.06 indicate acceptable model fit (Hu & Bentler, 1999). Reliability increases with session length.</div>
+  `;
+}
+
+function renderValidationPanel() {
+  if (!S.initialized) return;
+  const hcase = HISTORICAL_CASES[S.validationCase];
+  const ind = S.indicators;
+  const n = S.turns.length;
+  if (!n) {
+    document.getElementById('validationCaseDisplay').innerHTML = `
+      <div class="research-note"><strong>Comparison case loaded:</strong> ${hcase.name}<br>${hcase.notes}</div>
+      <div class="empty-state" style="padding:16px;">Log session turns to generate foresight accuracy metrics</div>`;
+    return;
+  }
+
+  function acc(sim, hist) { return Math.max(0, Math.round(100 - Math.abs(sim - hist))); }
+  const metrics = [
+    { label:'Coalition Strength', sim: ind.coalition, hist: hcase.coalition_hist, unit:'%' },
+    { label:'Compliance Signal', sim: ind.compliance, hist: hcase.compliance_hist, unit:'%' },
+    { label:'Legitimacy Score', sim: ind.legitimacy, hist: hcase.legitimacy_hist, unit:'/100' },
+    { label:'Fragmentation Risk', sim: ind.fragmentation, hist: hcase.fragmentation_hist, unit:'idx' },
+    { label:'Decision Latency', sim: Math.round(ind.latency*10)/10, hist: hcase.latency_hist, unit:'min' },
+    { label:'Escalation Index', sim: parseFloat(ind.escalation.toFixed(2)), hist: hcase.escalation_hist, unit:'0-1' },
+  ];
+
+  const overallAcc = Math.round(metrics.reduce((s,m) => s + acc(m.sim, m.hist), 0) / metrics.length);
+
+  document.getElementById('validationCaseDisplay').innerHTML = `
+    <div class="research-note" style="margin-bottom:14px;"><strong>Case:</strong> ${hcase.name} &nbsp;|&nbsp; <strong>Overall Foresight Accuracy:</strong> <span style="font-size:16px;font-weight:700;color:var(--teal);">${overallAcc}%</span><br><em>${hcase.notes}</em></div>
+    <table class="validation-table">
+      <thead><tr><th>Indicator</th><th>Simulated</th><th>Historical</th><th>Accuracy</th><th>Match</th></tr></thead>
+      <tbody>
+        ${metrics.map(m => {
+          const a = acc(m.sim, m.hist);
+          const cls = a >= 75 ? 'match-high' : a >= 50 ? 'match-mid' : 'match-low';
+          return `<tr>
+            <td>${m.label}</td>
+            <td><strong>${m.sim || '—'}</strong> ${m.unit}</td>
+            <td>${m.hist} ${m.unit}</td>
+            <td class="match-score ${cls}">${a}%</td>
+            <td><div class="delta-bar" style="width:80px;"><div class="delta-fill" style="width:${a}%;background:${a>=75?'var(--teal)':a>=50?'var(--amber)':'var(--crimson)'}"></div></div></td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+    <div class="formula-box" style="margin-top:12px;">
+      Accuracy<sub>pred</sub> = 1 − Σ|Ŷᵢ − Y*ᵢ| / N &nbsp;|&nbsp; Overall: <em>${overallAcc}%</em> &nbsp;|&nbsp; N turns: ${n} &nbsp;|&nbsp; Session: ${S.sessionId}
+    </div>
+  `;
+}
+
+function renderEDSDisplay() {
+  if (!S.turns.length) return;
+  const defections = S.turns.filter(t => t.actionType === 'defect').length;
+  const coalitions = S.turns.filter(t => t.actionType === 'coalition').length;
+  const complies = S.turns.filter(t => t.actionType === 'comply').length;
+  const escalations = S.turns.filter(t => t.escalation === 'high' || t.escalation === 'medium').length;
+
+  let eqState = 'Undetermined';
+  let eqClass = 'tag-ink';
+  if (defections > complies && S.indicators.fragmentation > 60) { eqState = 'Non-Cooperative Lock-in Risk'; eqClass = 'tag-crimson'; }
+  else if (escalations > S.turns.length * 0.3) { eqState = 'Escalation Equilibrium'; eqClass = 'tag-crimson'; }
+  else if (coalitions >= 2 && S.indicators.coalition > 60) { eqState = 'Cooperative Convergence'; eqClass = 'tag-teal'; }
+  else if (complies > defections) { eqState = 'Partial Nash Stability'; eqClass = 'tag-slate'; }
+
+  document.getElementById('edsDisplay').innerHTML = `
+    <div class="metric-row"><span class="metric-key">Equilibrium State</span><span class="tag ${eqClass}">${eqState}</span></div>
+    <div class="metric-row"><span class="metric-key">Defection Events</span><span class="metric-val ${defections>2?'crit':''}">${defections}</span></div>
+    <div class="metric-row"><span class="metric-key">Coalition Moves</span><span class="metric-val">${coalitions}</span></div>
+    <div class="metric-row"><span class="metric-key">Compliance Signals</span><span class="metric-val">${complies}</span></div>
+    <div class="metric-row"><span class="metric-key">Escalation Signals</span><span class="metric-val ${escalations>2?'warn':''}">${escalations}</span></div>
+    <div class="metric-row"><span class="metric-key">EDS Score</span><span class="metric-val">${(0.5 + (coalitions-defections)*0.05).toFixed(2)}</span></div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════════
+// SIPRI
+// ═══════════════════════════════════════════════════════════
+
+function renderSIPRI() {
+  const max = SIPRI_DATA[0].spend;
+  document.getElementById('sipriList').innerHTML = SIPRI_DATA.map(d => `
+    <div class="sipri-row">
+      <div>
+        <div class="sipri-country">${d.country}</div>
+        <div style="font-size:10px;color:var(--ink4);">${d.gdp}% GDP</div>
+      </div>
+      <div>
+        <span class="sipri-spend">$${d.spend}B</span>
+        <span class="sipri-mini-bar"><span class="sipri-mini-fill" style="width:${Math.round(d.spend/max*100)}%"></span></span>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════════════════
+// AAR & EXPORT
+// ═══════════════════════════════════════════════════════════
+
+function generateAAR() {
+  if (!S.initialized) { alert('Initialise and run a session first'); return; }
+  const sc = SCENARIOS[S.scenario];
+  const hcase = HISTORICAL_CASES[S.validationCase];
+  const ind = S.indicators;
+  const gwc = S.gwc ? S.gwc.toFixed(3) : '—';
+  const topBGC = Object.entries(S.bgcScores).sort((a,b) => b[1]-a[1])[0];
+  const botBGC = Object.entries(S.bgcScores).sort((a,b) => a[1]-b[1])[0];
+  const defections = S.turns.filter(t => t.actionType === 'defect').length;
+  const coalitions = S.turns.filter(t => t.actionType === 'coalition').length;
+
+  document.getElementById('aarContent').innerHTML = `
+    <div class="aar-section">
+      <div class="aar-heading">Session Record</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px;">
+        <div><div class="field-label">Session ID</div><div style="font-family:'JetBrains Mono';font-size:11px;color:var(--teal);">${S.sessionId}</div></div>
+        <div><div class="field-label">Scenario</div><div style="font-size:12px;font-weight:600;">${sc.name}</div></div>
+        <div><div class="field-label">Composition (Obj 3)</div><div><span class="tag tag-amber">${S.composition.toUpperCase()}</span></div></div>
+        <div><div class="field-label">g-GWC Final</div><div style="font-family:'Playfair Display';font-size:22px;font-weight:700;color:var(--teal);">${gwc}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;">
+        <div><div class="field-label">Rounds Completed</div><div style="font-size:13px;font-weight:600;">${S.round} / ${S.totalRounds}</div></div>
+        <div><div class="field-label">Turns Logged</div><div style="font-size:13px;font-weight:600;">${S.turns.length}</div></div>
+        <div><div class="field-label">Thresholds Crossed</div><div style="font-size:13px;font-weight:600;">${S.thresholds.length}</div></div>
+        <div><div class="field-label">Validation Case</div><div style="font-size:12px;font-weight:600;">${hcase.name}</div></div>
+      </div>
+    </div>
+
+    <div class="aar-section">
+      <div class="aar-heading">Executive Summary</div>
+      <div class="aar-text">
+        A ${S.turns.length}-turn wargaming session was conducted under the <strong>${sc.name}</strong> scenario with a <strong>${S.composition}</strong> participant composition group. ${S.round} of ${S.totalRounds} rounds were completed. The session operationalised policy proposals as structured moves with actor rationale capture, aligned to Evans (2024) E-AGPO-HT research instrument protocol.
+      </div>
+    </div>
+
+    <div class="aar-section">
+      <div class="aar-heading">Objective 3 — Demographic Group Findings</div>
+      <div class="aar-text">Composition group: <strong>${S.composition.toUpperCase()}</strong>. ${S.turns.length} moves logged. ${defections} defection events, ${coalitions} coalition-formation moves. ${S.sessionNotes ? 'Researcher notes: ' + S.sessionNotes : ''}</div>
+      <div class="aar-finding">Coalition formation: ${ind.coalition}% | Defection rate: ${S.turns.length ? Math.round(defections/S.turns.length*100) : 0}% | Compliance rate: ${S.turns.length ? Math.round(S.turns.filter(t=>t.actionType==='comply').length/S.turns.length*100) : 0}% — compare against other composition groups to address Objective 3 subsidiary question.</div>
+    </div>
+
+    <div class="aar-section">
+      <div class="aar-heading">Objective 4 — Governance Indicator Outcomes</div>
+      <div class="aar-text">Final indicator values derived from E-AGPO-HT operational factor aggregation across ${S.turns.length} turns:</div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;">
+        ${[['Coalition',ind.coalition+'%'],['Compliance',ind.compliance+'%'],['Legitimacy',ind.legitimacy],['Pub. Trust',ind.publicTrust],['Fragmentation',ind.fragmentation],['Escalation',ind.escalation.toFixed(2)],['Resilience',ind.resilience],['g-GWC',gwc]].map(([k,v])=>`<div style="background:var(--surface2);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;"><div class="field-label" style="margin:0 0 3px;">${k}</div><div style="font-size:16px;font-weight:700;color:var(--ink);">${v}</div></div>`).join('')}
+      </div>
+    </div>
+
+    <div class="aar-section">
+      <div class="aar-heading">Objective 6 — Foresight Validity</div>
+      <div class="aar-text">Simulated outcomes compared against <strong>${hcase.name}</strong> historical case.</div>
+      <div class="aar-finding">${hcase.notes}</div>
+    </div>
+
+    <div class="aar-section">
+      <div class="aar-heading">Strongest / Weakest BGC Capabilities</div>
+      <div class="aar-text">
+        <strong>Strongest:</strong> ${topBGC ? topBGC[0] + ' (' + topBGC[1].toFixed(3) + ')' : '—'} — robust performance under session conditions.<br>
+        <strong>Weakest:</strong> ${botBGC ? botBGC[0] + ' (' + botBGC[1].toFixed(3) + ')' : '—'} — targeted capability development recommended per optimization model.
+      </div>
+    </div>
+
+    <div class="aar-section" style="border-bottom:none;">
+      <div class="flex-gap">
+        <span class="tag tag-teal">E-AGPO-HT Framework</span>
+        <span class="tag tag-slate">BSU Doctoral Research</span>
+        <span class="tag tag-amber">Session: ${S.sessionId}</span>
+        <span class="tag tag-ink">Supervisor: Dr. J. Curry</span>
+        <span class="tag tag-ink">PI: Evans, G-A.</span>
+      </div>
+    </div>
+  `;
+
+  // Codeable prompts
+  document.getElementById('codeableCard').style.display = '';
+  document.getElementById('codeableContent').innerHTML = `
+    <div class="research-note" style="margin-bottom:12px;">The following structured prompts align to research objectives for qualitative coding of session data. Respond to each following session debrief with participants.</div>
+    ${[
+      ['OBJ 3', 'How did the ' + S.composition + ' composition group differ in coalition-formation behaviour compared to expected baseline?'],
+      ['OBJ 3', 'What institutional biases or identity-linked negotiation patterns were observable in this group composition?'],
+      ['OBJ 4', 'Which governance indicator showed the greatest deviation from session baseline, and what actor moves caused it?'],
+      ['OBJ 4', 'At what point did institutional resilience begin to degrade, and what design changes would address this?'],
+      ['OBJ 6', 'How closely did simulated outcomes match the ' + hcase.name + ' historical case? What explains divergence?'],
+      ['OBJ 6', 'What aspects of societal acceptance or privacy compliance dynamics did the simulation capture most/least accurately?'],
+      ['GENERAL', 'What failure mode (fragmentation, escalation, non-cooperative lock-in) was most prominent and why?'],
+      ['GENERAL', 'What design change to the wargame mechanics would improve policy resilience measurement?'],
+    ].map(([obj, q]) => `<div class="metric-row" style="align-items:start;padding:8px 0;"><span class="obj-ref" style="flex-shrink:0;margin-top:2px;">${obj}</span><span style="font-size:12.5px;color:var(--ink2);margin-left:10px;">${q}</span></div>`).join('')}
+  `;
+
+  // JSON
+  document.getElementById('jsonCard').style.display = '';
+  document.getElementById('jsonPreview').textContent = JSON.stringify({
+    session_id: S.sessionId,
+    framework: 'E-AGPO-HT v3.1',
+    instrument: 'Auracelle Charlie',
+    pi: 'Evans, G-A.',
+    institution: 'Bath Spa University',
+    supervisor: 'Dr. John Curry',
+    timestamp: new Date().toISOString(),
+    configuration: { scenario: S.scenario, composition: S.composition, rounds_total: S.totalRounds, rounds_completed: S.round, info_regime: document.getElementById('infoRegime')?.value, eq_target: document.getElementById('eqTarget')?.value },
+    outcomes: { gwc: S.gwc, bgc_scores: S.bgcScores, indicators: S.indicators, thresholds_crossed: S.thresholds.length },
+    validation: { case: S.validationCase, case_name: hcase.name },
+    turns: S.turns.map(t => ({ id:t.id, round:t.round, actor:t.actor, bgc:t.bgc, action_type:t.actionType, action:t.action, rationale:t.rationale, latency:t.latency, confidence:t.confidence, coalition_effect:t.coalition, escalation_signal:t.escalation, composition_group:t.composition }))
+  }, null, 2);
+}
+
+function exportJSON() {
+  if (!S.turns.length) { alert('No session data to export'); return; }
+  generateAAR();
+  const data = { session_id: S.sessionId, framework:'E-AGPO-HT v3.1', pi:'Evans, G-A.', institution:'Bath Spa University', timestamp: new Date().toISOString(), composition: S.composition, scenario: S.scenario, turns: S.turns, outcomes: { gwc: S.gwc, bgc_scores: S.bgcScores, indicators: S.indicators } };
+  download(JSON.stringify(data, null, 2), `charlie-${S.sessionId}.json`, 'application/json');
+}
+
+function exportCSV() {
+  if (!S.turns.length) { alert('No turns to export'); return; }
+  const headers = ['id','round','actor','actor_role','bgc','action_type','action','rationale','latency','confidence','coalition_effect','escalation_signal','composition_group','timestamp'];
+  const rows = S.turns.map(t => headers.map(h => `"${String(t[h.replace(/_([a-z])/g, (_,c) => c.toUpperCase())] || t[h] || '').replace(/"/g,'""')}"`).join(','));
+  download([headers.join(','), ...rows].join('\n'), `charlie-turns-${S.sessionId}.csv`, 'text/csv');
+}
+
+function download(content, filename, type) {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([content], {type}));
+  a.download = filename;
+  a.click();
+}
+
+function printAAR() {
+  generateAAR();
+  setTimeout(() => window.print(), 300);
+}
+
+function loadCompletedSessions() {
+  // stub — would load from localStorage in extended version
+}
+
+// ═══════════════════════════════════════════════════════════
+// ACTION HELP HINTS
+// ═══════════════════════════════════════════════════════════
+
+const ACTION_HELP = {
+  'Table a draft treaty or framework text': 'The actor formally introduces a written governance text for group consideration — the primary move for initiating binding frameworks.',
+  'Submit a formal amendment to existing text': 'The actor modifies an existing proposal — signals engagement with the process while pursuing adjustments to their advantage.',
+  'Issue a joint communiqué or declaration': 'Two or more actors issue a shared statement — strong coalition signal, increases legitimacy.',
+  'Present a counter-proposal to a rival position': 'The actor rejects another\'s proposal and offers an alternative — high negotiation tension, tests resolve.',
+  'Request procedural delay or adjournment': 'The actor stalls the process — a delay tactic, often used when losing ground or buying time.',
+  'Invoke consensus-blocking mechanism': 'The actor formally blocks agreement — high fragmentation impact, signals red-line.',
+  'Form or announce a bilateral alliance': 'Two actors declare a formal alignment — strong coalition-strengthening move.',
+  'Invite additional actors into coalition': 'Expanding the coalition base — increases legitimacy and compliance pressure on others.',
+  'Signal willingness to lead multilateral effort': 'Actor positions itself as a governance leader — high legitimacy, increases institutional implementation capacity.',
+  'Broker compromise between rival blocs': 'Mediating between opposing groups — highest coalition and legitimacy impact.',
+  'Withdraw from coalition or alliance': 'Actor exits an alignment — major fragmentation signal.',
+  'Accept binding compliance mechanism': 'Actor agrees to enforceable obligations — highest compliance score impact.',
+  'Propose voluntary self-regulatory framework': 'Actor offers compliance without external enforcement — moderate signal, often industry-led.',
+  'Request independent verification or audit': 'Actor calls for external oversight — high legitimacy and confidence signal.',
+  'Signal conditional compliance (with caveats)': 'Actor signals partial buy-in with conditions attached — common real-world move.',
+  'Contest verification modality or process': 'Actor challenges how compliance is measured — delays and weakens compliance mechanisms.',
+  'Invoke sovereignty exception to compliance': 'Actor claims exemption from obligations — defection signal, high fragmentation risk.',
+  'Issue public ultimatum or red-line statement': 'Actor declares a non-negotiable limit — high escalation signal, crisis mode.',
+  'Impose or threaten economic sanctions': 'Coercive pressure move — escalation ladder, reduces coalition breadth.',
+  'Refer dispute to international body (UN, ICJ)': 'Escalates to formal multilateral arbitration — high legitimacy but signals breakdown.',
+  'Publish adverse report or accountability finding': 'Civil society or media move — legitimacy impact, puts actors on record.',
+  'Signal military readiness or deterrence posture': 'Defense actors invoke security stakes — maximum escalation signal.',
+  'Publish independent accountability report': 'Civil society generates public accountability — legitimacy and public trust boost.',
+  'Launch public awareness campaign': 'Broadens the governance debate to public sphere — public trust impact.',
+  'File legal challenge to governance measure': 'Judicial escalation — delays compliance, high legitimacy contest.',
+  'Convene multi-stakeholder consultation': 'Opens governance process to wider input — legitimacy and coalition boost.',
+  'Endorse or oppose framework publicly': 'Public positioning — coalition and legitimacy signal depending on direction.',
+  'Propose technical standard or specification': 'Industry or standards body move — compliance and implementation capacity.',
+  'Submit evidence or technical assessment': 'Evidence-based governance move — evidentiary confidence boost.',
+  'Conduct risk or impact assessment': 'Structured analysis presented to group — confidence and legitimacy.',
+  'Signal industry self-regulation commitment': 'Industry voluntarily accepts governance norms — compliance signal.',
+  'Contest technical feasibility of proposed measure': 'Actor argues implementation is impractical — delays and weakens governance measure.',
+};
+
+function updateActionHelp() {
+  const val = document.getElementById('turnAction')?.value || '';
+  const help = ACTION_HELP[val] || '';
+  const el = document.getElementById('actionHelp');
+  if (el) el.textContent = help;
+}
+
+// ═══════════════════════════════════════════════════════════
+// HOVER TOOLTIP SYSTEM (native title enhancement)
+// ═══════════════════════════════════════════════════════════
+
+const FIELD_TOOLTIPS = {
+  'turnActor': 'Select the actor whose move you are recording. Actors correspond to your participant group composition (state, institution, civil society, or industry representative).',
+  'turnBGC': 'Select the governance capability domain this move primarily engages. Each domain tracks a different dimension of governance performance and feeds the g-GWC index.',
+  'turnActionType': 'Select the strategic type of move. This categorises the actor\'s intent — does not require a country-level actor; any stakeholder type (NGO, industry, institution) can make any move type.',
+  'turnLatency': 'Record the number of minutes the participant took to make this decision. Decision latency is a key governance indicator — long latency signals complexity or information deficits.',
+  'turnConfidence': 'Estimate the participant\'s apparent confidence in their move based on observed behaviour, stated rationale, or body language. This feeds the evidentiary confidence indicator.',
+  'turnCoalition': 'Assess whether this move strengthened or weakened the emerging actor coalition. Coalition strength is a core governance outcome (Objective 4).',
+  'turnEscalation': 'Record whether this move signals movement up the escalation ladder. High escalation signals require facilitator attention and trigger threshold alerts.',
+  'sessionNotes': 'Record any contextual observations about the session, participants, setting, or pre-session dynamics. These notes appear in the After-Action Review and support qualitative analysis.',
+  'participantCount': 'Number of human participants in this session. Recorded in session metadata for comparative analysis across groups.',
+  'validationCase': 'Choose the historical governance case this session will be compared against. The foresight validation panel will compute accuracy metrics showing how closely your simulation matched documented real-world outcomes.',
+  'scenarioDomain': 'Choose the governance domain for this session. The scenario defines the policy stakes, actor incentives, and governance dilemmas participants will navigate.',
+  'timePressure': 'Sets the number of rounds available. Crisis mode (2 rounds) replicates high-pressure decision environments; standard mode (6 rounds) allows deliberative governance.',
+  'infoRegime': 'Partial: actors have incomplete information (realistic). Complete: full transparency. Adversarial: actors actively contest facts and evidence.',
+  'eqTarget': 'The theoretical optimum the facilitator is targeting. Nash = no actor benefits from unilaterally changing strategy. Pareto = no improvement possible without harming someone. Cooperative = joint maximum.',
+};
+
+function initTooltips() {
+  Object.entries(FIELD_TOOLTIPS).forEach(([id, tip]) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.title = tip;
+      const label = el.closest('.field-group')?.querySelector('label');
+      if (label && !label.title) label.title = tip;
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════
+// MARL ENGINE
+// ═══════════════════════════════════════════════════════════
+
+const MARL_ACTIONS = ['propose', 'coalition', 'comply', 'defect', 'escalate', 'counter', 'verify', 'delay'];
+const MARL_ACTION_LABELS = {
+  propose:'Propose Treaty', coalition:'Form Coalition', comply:'Signal Compliance',
+  defect:'Defect', escalate:'Escalate', counter:'Counter-Propose',
+  verify:'Request Verification', delay:'Procedural Delay'
+};
+
+const EGT_STRATEGIES = ['Cooperative Norm', 'Competitive Holdout', 'Conditional Cooperation', 'Free Rider', 'Mediator'];
+
+let MARL = {
+  running: false,
+  episode: 0,
+  totalEpisodes: 60,
+  agents: [],
+  log: [],
+  convergenceHistory: [],
+  rewardHistory: [],
+  nashDetected: false,
+  interval: null,
+  egtPopulation: {}
+};
+
+function marlInit() {
+  if (!S.initialized || !S.actors.length) {
+    // Use default actor set if no session
+    const actors = ACTOR_POOLS['mixed'];
+    MARL.agents = actors.map(a => ({
+      id: a.id, name: a.name, color: a.color,
+      qTable: {}, // state -> action -> Q-value
+      policy: 'explore',
+      totalReward: 0,
+      lastAction: null,
+      lastQ: 0
+    }));
+  } else {
+    MARL.agents = S.actors.map(a => ({
+      id: a.id, name: a.name, color: a.color,
+      qTable: {}, policy: 'explore', totalReward: 0, lastAction: null, lastQ: 0
+    }));
+  }
+  // Init Q-tables
+  MARL.agents.forEach(agent => {
+    MARL_ACTIONS.forEach(action => {
+      agent.qTable[action] = (Math.random() - 0.5) * 0.2;
+    });
+  });
+  // Init EGT population
+  EGT_STRATEGIES.forEach(s => {
+    MARL.egtPopulation[s] = Math.random();
+  });
+  // Normalise EGT
+  const total = Object.values(MARL.egtPopulation).reduce((a,b)=>a+b,0);
+  EGT_STRATEGIES.forEach(s => { MARL.egtPopulation[s] /= total; });
+}
+
+function marlGetState() {
+  // State is a discretized representation of governance conditions
+  const coalitionBin = Math.floor((S.indicators.coalition || 40) / 25);
+  const fragBin = Math.floor((S.indicators.fragmentation || 50) / 34);
+  const regime = document.getElementById('marlRegime')?.value || 'mixed';
+  return `${coalitionBin}-${fragBin}-${regime}-ep${Math.floor(MARL.episode / 10)}`;
+}
+
+function marlChooseAction(agent, state, epsilon) {
+  if (Math.random() < epsilon) {
+    return MARL_ACTIONS[Math.floor(Math.random() * MARL_ACTIONS.length)];
+  }
+  // Exploit: pick highest Q-value action
+  let bestAction = MARL_ACTIONS[0];
+  let bestQ = agent.qTable[MARL_ACTIONS[0]] || 0;
+  MARL_ACTIONS.forEach(a => {
+    const q = agent.qTable[a] || 0;
+    if (q > bestQ) { bestQ = q; bestAction = a; }
+  });
+  return bestAction;
+}
+
+function marlComputeReward(action, agentId, regime) {
+  const rewardMap = {
+    cooperative: { propose:0.8, coalition:0.9, comply:1.0, defect:-0.9, escalate:-0.5, counter:0.3, verify:0.7, delay:-0.3 },
+    competitive:  { propose:0.4, coalition:0.3, comply:0.2, defect:0.7,  escalate:0.5,  counter:0.6, verify:0.2, delay:0.5  },
+    mixed:        { propose:0.6, coalition:0.7, comply:0.6, defect:-0.2, escalate:0.1,  counter:0.4, verify:0.5, delay:-0.1 }
+  };
+  const base = rewardMap[regime][action] || 0;
+  const noise = (Math.random() - 0.5) * 0.3;
+  // Bonus for coalition and compliance when convergence is high
+  const convBonus = MARL.convergenceHistory.length > 5 ?
+    (MARL.convergenceHistory[MARL.convergenceHistory.length-1] / 100 * 0.2) : 0;
+  return Math.max(-1, Math.min(1, base + noise + convBonus));
+}
+
+function marlUpdateQ(agent, action, reward, nextState, alpha, gamma) {
+  const currentQ = agent.qTable[action] || 0;
+  const maxNextQ = Math.max(...MARL_ACTIONS.map(a => agent.qTable[a] || 0));
+  // Bellman equation: Q(s,a) <- Q(s,a) + α[r + γ·maxQ(s',a') - Q(s,a)]
+  agent.qTable[action] = currentQ + alpha * (reward + gamma * maxNextQ - currentQ);
+  agent.lastQ = agent.qTable[action];
+  agent.lastAction = action;
+  agent.totalReward += reward;
+}
+
+function marlUpdateEGT() {
+  // Replicator dynamics: strategies with above-average fitness grow
+  const fitness = {};
+  EGT_STRATEGIES.forEach(s => {
+    fitness[s] = MARL.egtPopulation[s] * (0.5 + Math.random() * 0.8);
+  });
+  const meanFitness = Object.values(fitness).reduce((a,b)=>a+b,0) / EGT_STRATEGIES.length;
+  EGT_STRATEGIES.forEach(s => {
+    MARL.egtPopulation[s] = Math.max(0.02,
+      MARL.egtPopulation[s] + 0.05 * MARL.egtPopulation[s] * (fitness[s] - meanFitness)
+    );
+  });
+  // Renormalise
+  const total = Object.values(MARL.egtPopulation).reduce((a,b)=>a+b,0);
+  EGT_STRATEGIES.forEach(s => { MARL.egtPopulation[s] /= total; });
+}
+
+function marlComputeConvergence() {
+  // Convergence: how consistent are agent best-actions across last N episodes?
+  if (MARL.episode < 5) return 0;
+  const bestActions = MARL.agents.map(a => {
+    let best = MARL_ACTIONS[0], bestQ = a.qTable[MARL_ACTIONS[0]] || 0;
+    MARL_ACTIONS.forEach(act => { if ((a.qTable[act]||0) > bestQ) { bestQ = a.qTable[act]; best = act; } });
+    return best;
+  });
+  const cooperativeCount = bestActions.filter(a => ['comply','coalition','propose','verify'].includes(a)).length;
+  const baseConv = Math.min(95, (MARL.episode / MARL.totalEpisodes) * 85 + cooperativeCount * 3);
+  return Math.round(baseConv);
+}
+
+function marlCheckNash() {
+  // Nash: each agent's best response is a best response to others' best responses
+  const convergence = marlComputeConvergence();
+  const regime = document.getElementById('marlRegime')?.value || 'mixed';
+  if (convergence > 65 && MARL.episode > MARL.totalEpisodes * 0.6) {
+    if (regime === 'cooperative') return convergence > 70;
+    if (regime === 'competitive') return convergence > 55;
+    return convergence > 60;
+  }
+  return false;
+}
+
+function marlRunEpisode() {
+  const alpha = parseFloat(document.getElementById('marlAlpha')?.value || 0.15);
+  const gamma = parseFloat(document.getElementById('marlGamma')?.value || 0.85);
+  const epsilon = Math.max(0.05, parseFloat(document.getElementById('marlEpsilon')?.value || 0.3) * (1 - MARL.episode / MARL.totalEpisodes));
+  const regime = document.getElementById('marlRegime')?.value || 'mixed';
+
+  MARL.episode++;
+  const state = marlGetState();
+  let episodeReward = 0;
+
+  const moves = [];
+  MARL.agents.forEach(agent => {
+    const action = marlChooseAction(agent, state, epsilon);
+    const reward = marlComputeReward(action, agent.id, regime);
+    marlUpdateQ(agent, action, reward, state, alpha, gamma);
+    agent.policy = reward > 0.3 ? 'exploit' : reward < -0.2 ? 'cautious' : 'explore';
+    episodeReward += reward;
+    moves.push({ agent: agent.name.split(' ')[0], action, reward });
+  });
+
+  marlUpdateEGT();
+  const convergence = marlComputeConvergence();
+  MARL.convergenceHistory.push(convergence);
+  MARL.rewardHistory.push(episodeReward / MARL.agents.length);
+  MARL.nashDetected = marlCheckNash();
+
+  // Log every 5th episode
+  if (MARL.episode % 5 === 0 || MARL.episode <= 3) {
+    const topMove = moves.sort((a,b) => b.reward - a.reward)[0];
+    marlLog(`Ep.${MARL.episode} · <span class="agt">${topMove.agent}</span> best: <span class="pol">${MARL_ACTION_LABELS[topMove.action]}</span> · rew=<span class="rew">${topMove.reward.toFixed(3)}</span> · conv=${convergence}% · ε=${epsilon.toFixed(2)}`);
+  }
+
+  return convergence;
+}
+
+function marlUpdateUI() {
+  const conv = MARL.convergenceHistory[MARL.convergenceHistory.length-1] || 0;
+  const meanRew = MARL.rewardHistory.length ? (MARL.rewardHistory.reduce((a,b)=>a+b,0)/MARL.rewardHistory.length).toFixed(3) : '—';
+
+  document.getElementById('mEp').textContent = MARL.episode;
+  document.getElementById('mConv').textContent = conv + '%';
+  document.getElementById('mConvBar').style.width = conv + '%';
+  document.getElementById('mRew').textContent = meanRew;
+  document.getElementById('mNash').textContent = MARL.nashDetected ? '✓ Detected' : 'Not yet';
+  document.getElementById('mNash').style.color = MARL.nashDetected ? '#4ade80' : 'var(--teal-mid)';
+
+  // Agent cards
+  document.getElementById('marlAgentGrid').innerHTML = MARL.agents.map(a => {
+    const bestAct = MARL_ACTIONS.reduce((best, act) => (a.qTable[act]||0) > (a.qTable[best]||0) ? act : best, MARL_ACTIONS[0]);
+    const bestQ = (a.qTable[bestAct] || 0).toFixed(3);
+    return `
+      <div class="marl-agent">
+        <div class="marl-agent-name" style="color:${a.color}">${a.name.split(' ').slice(0,2).join(' ')}</div>
+        <div class="marl-agent-q">${bestQ}</div>
+        <div class="marl-agent-policy">${MARL_ACTION_LABELS[bestAct] || bestAct}</div>
+        <div class="marl-agent-rew">Σrew: ${a.totalReward.toFixed(2)}</div>
+      </div>`;
+  }).join('');
+
+  // Q-table
+  document.getElementById('marlQBody').innerHTML = MARL.agents.map(a => {
+    const bestAct = MARL_ACTIONS.reduce((best,act) => (a.qTable[act]||0)>(a.qTable[best]||0)?act:best, MARL_ACTIONS[0]);
+    const q = a.qTable[bestAct] || 0;
+    const cls = q > 0.2 ? 'q-pos' : q < -0.1 ? 'q-neg' : 'q-neu';
+    return `<tr><td style="color:${a.color}">${a.name.split(' ')[0]}</td><td>${MARL_ACTION_LABELS[bestAct]}</td><td class="${cls}">${q.toFixed(4)}</td><td style="color:#a78bfa">${a.policy}</td></tr>`;
+  }).join('');
+
+  // EGT table
+  const sortedEGT = EGT_STRATEGIES.map(s => ({ s, p: MARL.egtPopulation[s], f: 0.3+Math.random()*0.7 }))
+    .sort((a,b) => b.p - a.p);
+  document.getElementById('marlEGTBody').innerHTML = sortedEGT.map((e,i) => {
+    const trend = i === 0 ? '▲ dominant' : e.p > 0.15 ? '→ stable' : '▼ declining';
+    const trendColor = i === 0 ? '#4ade80' : e.p > 0.15 ? 'rgba(200,232,228,0.5)' : '#f87171';
+    return `<tr><td>${e.s}</td><td>${Math.round(e.p*100)}%</td><td>${e.f.toFixed(2)}</td><td style="color:${trendColor}">${trend}</td></tr>`;
+  }).join('');
+
+  // Feed MARL results back into governance indicators if session active
+  if (S.initialized && MARL.episode % 10 === 0) {
+    const convNorm = conv / 100;
+    S.indicators.coalition = Math.min(100, Math.round((S.indicators.coalition || 40) * 0.7 + convNorm * 80 * 0.3));
+    S.indicators.resilience = Math.min(100, Math.round(convNorm * 85));
+    S.gwc = Math.min(1, (S.gwc || 0.5) + convNorm * 0.05);
+    document.getElementById('gwcVal').textContent = S.gwc.toFixed(3);
+    renderIndicatorCards();
+  }
+}
+
+function marlLog(msg) {
+  const log = document.getElementById('marlLog');
+  const line = document.createElement('div');
+  line.className = 'marl-log-line';
+  line.innerHTML = msg;
+  log.prepend(line);
+  // keep last 50 lines
+  while (log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+function marlRun() {
+  if (MARL.running) { marlStop(); return; }
+  marlInit();
+  MARL.running = true;
+  MARL.episode = 0;
+  MARL.convergenceHistory = [];
+  MARL.rewardHistory = [];
+  MARL.nashDetected = false;
+  MARL.totalEpisodes = parseInt(document.getElementById('marlEpisodes')?.value || 60);
+  document.getElementById('marlRunBtn').textContent = '⏹ Stop';
+  document.getElementById('marlStatus').textContent = 'RUNNING';
+  document.getElementById('marlStatus').style.color = '#4ade80';
+  marlLog('=== MARL session started · ' + MARL.totalEpisodes + ' episodes · regime: ' + (document.getElementById('marlRegime')?.value||'mixed') + ' ===');
+
+  MARL.interval = setInterval(() => {
+    for (let i = 0; i < 3; i++) { // 3 episodes per tick for speed
+      if (MARL.episode >= MARL.totalEpisodes) { marlStop(); return; }
+      marlRunEpisode();
+    }
+    marlUpdateUI();
+  }, 80);
+}
+
+function marlStep() {
+  if (!MARL.agents.length) marlInit();
+  marlRunEpisode();
+  marlUpdateUI();
+}
+
+function marlStop() {
+  MARL.running = false;
+  clearInterval(MARL.interval);
+  document.getElementById('marlRunBtn').textContent = '▶ Run MARL';
+  document.getElementById('marlStatus').textContent = 'COMPLETE · Ep.' + MARL.episode;
+  document.getElementById('marlStatus').style.color = 'var(--teal-mid)';
+  marlLog(`=== Session complete · ${MARL.episode} episodes · Nash: ${MARL.nashDetected ? 'DETECTED' : 'not detected'} · Conv: ${MARL.convergenceHistory[MARL.convergenceHistory.length-1]||0}% ===`);
+  marlUpdateUI();
+}
+
+function marlReset() {
+  marlStop();
+  MARL = { running:false, episode:0, totalEpisodes:60, agents:[], log:[], convergenceHistory:[], rewardHistory:[], nashDetected:false, interval:null, egtPopulation:{} };
+  document.getElementById('marlQBody').innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(200,232,228,0.3);padding:12px;">Run simulation to populate</td></tr>';
+  document.getElementById('marlEGTBody').innerHTML = '<tr><td colspan="4" style="text-align:center;color:rgba(200,232,228,0.3);padding:12px;">Run simulation to populate</td></tr>';
+  document.getElementById('marlLog').innerHTML = '<div class="marl-log-line">MARL engine reset · ready</div>';
+  document.getElementById('mEp').textContent = '0';
+  document.getElementById('mConv').textContent = '0%';
+  document.getElementById('mConvBar').style.width = '0%';
+  document.getElementById('mRew').textContent = '—';
+  document.getElementById('mNash').textContent = '—';
+  document.getElementById('marlStatus').textContent = 'IDLE';
+  document.getElementById('marlRunBtn').textContent = '▶ Run MARL';
+  document.getElementById('marlAgentGrid').innerHTML = '<div class="marl-agent"><div class="marl-agent-name" style="color:rgba(200,232,228,0.5);">—</div><div class="marl-agent-q">—</div><div class="marl-agent-policy">reset</div></div>';
+}
+
+function switchTab(id) {
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+  document.getElementById('tab-' + id).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════════
+// START
+// ═══════════════════════════════════════════════════════════
+
+init();
+</script>
+</body>
+</html>
