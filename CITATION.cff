@@ -1,0 +1,14 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it."
+title: "Auracelle Charlie — BSU Research Instrument (v3 HTML Prototype)"
+authors:
+  - family-names: "Evans"
+    given-names: "Grace-Alice"
+date-released: "2026-03-03"
+type: software
+license: MIT
+repository-code: "https://github.com/<your-org-or-user>/auracelle-charlie-bsu-research-prototype-v3"
+abstract: >
+  Auracelle Charlie is a governance-focused wargaming research instrument presented as an interactive HTML prototype,
+  designed to record structured turns, compute governance indicators, support foresight validation, and generate
+  after-action review artifacts under the E-AGPO-HT framework.
