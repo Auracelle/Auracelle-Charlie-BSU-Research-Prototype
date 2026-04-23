@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+title: "Auracelle Charlie — BSU Doctoral Research Instrument"
+version: "0.5.0"
+date-released: "2026-04-14"
+type: software
+license: MIT
+repository-code: "https://github.com/auracelle/auracelle-charlie-bsu-sandbox"
+url: "https://auracelle.github.io/Auracelle-AI-Governance-Labs-Platform-Comms-Public"
+authors:
+  - family-names: "Evans"
+    given-names: "Grace-Alice"
+    affiliation: "Bath Spa University; Auracelle AI Governance Labs; UC Berkeley Center for Long-Term Cybersecurity (CLTC)"
+keywords:
+  - "AI governance"
+  - "wargaming"
+  - "policy simulation"
+  - "E-AGPO-HT"
+  - "governance indicators"
+  - "MARL"
+  - "red teaming"
+  - "MITRE ATT&CK"
+  - "cross-session analysis"
+  - "policy stress-testing"
+  - "doctoral research instrument"
+abstract: >
+  Auracelle Charlie is a single-file browser-based governance wargaming simulation
+  instrument developed as a doctoral research tool under the E-AGPO-HT
+  (Evans-Accelerated Governance Policy Optimisation — Hierarchical Theory) framework.
+  It supports facilitated and autonomous multi-actor governance sessions with
+  structured round arcs, role-differentiated deliverable capture, real-time
+  governance indicator tracking, MITRE ATT&CK compound shock injection,
+  Multi-Agent Reinforcement Learning, LLM-backed agentic Policy Owner and
+  Red Team roles via the Anthropic API, Policy Stress-Test Outcome Assessment (PSTOA)
+  scoring, and cross-session archive tracking for optimization trajectory analysis.
+references:
+  - type: article
+    title: "MITRE ATT&CK: Design and Philosophy"
+    authors:
+      - family-names: "Strom"
+        given-names: "Blake E."
+    year: 2018
+    publisher:
+      name: "The MITRE Corporation"
+  - type: standard
+    title: "MITRE ATT&CK Framework v14"
+    url: "https://attack.mitre.org"
